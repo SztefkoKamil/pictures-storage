@@ -11,7 +11,19 @@
 </head>
 <body>
     <div class="container">
-      login panel
+      <div class="login-header">
+        <h2>Zaloguj się na swoje konto lub zarejestruj jeśli jeszcze nie masz u nas konta.</h2>
+      </div>
+      <form class="login-form" id="login-form">
+        <label for="login-email">E-mail</label>
+        <input id="login-email"type="text">
+        <label class="login-password-label" for="login-password">Hasło</label>
+        <input id="login-password" type="password">
+        <button class="login-button" id="login-button">Zaloguj</button>
+      </form>
+      <a href="html/register.html">
+        <button class="goto-register-button" id="goto-register-button">Rejestracja</button>
+      </a>
     </div>
 </body>
 </html>

@@ -15,4 +15,7 @@ body{
   margin-top: 50px;
   background: #fafafa;
   width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

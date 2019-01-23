@@ -1,0 +1,31 @@
+.login-header{
+  width: 550px;
+  padding: 30px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-form{
+  margin: 20px 0 50px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  padding: 20px;
+  box-shadow: 1px 1px 5px 0px gray;
+}
+
+.login-password-label{
+  margin-top: 15px;
+}
+
+.login-button{
+  margin: 15px 0 0 0;
+  padding: 5px 10px;
+}
+
+.goto-register-button{
+  padding: 5px 10px;
+  margin-bottom: 50px;
+  box-shadow: 1px 1px 5px 0px gray;
+}

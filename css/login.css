@@ -15,6 +15,13 @@
   box-shadow: 1px 1px 5px 0px gray;
 }
 
+body input{
+  border: 1px solid black;
+  height: 20px;
+  padding: 5px;
+  text-align: center;
+}
+
 .login-password-label{
   margin-top: 15px;
 }
@@ -22,6 +29,10 @@
 .login-button{
   margin: 15px 0 0 0;
   padding: 5px 10px;
+}
+
+.login-error{
+  border: 1px solid red;
 }
 
 .goto-register-button{

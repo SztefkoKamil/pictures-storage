@@ -1,0 +1,98 @@
+
+.action-bar{
+  width: 890px;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid black;
+  box-shadow: 3px 3px 5px 0px gray;
+  margin-top: 30px;
+  padding: 0px 15px;
+}
+
+.action-bar h3{
+  width: 160px;
+  font-weight: 400;
+}
+
+.upload-field{
+  width: 400px;
+  height: 80px;
+  background: #eee;
+  margin: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drop-field{
+  background: yellow;
+  height: 100%;
+}
+
+.logout-button{
+  width: 120px;
+  height: 50px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.delete-user-button{
+  width: 50px;
+  cursor: pointer;
+}
+
+
+/* ---------------------------------------- */
+
+.storage-container{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.img-container{
+  width: 200px;
+  height: 160px;
+  margin: 15px;
+  box-shadow: 3px 3px 5px 0px gray;
+  position: relative;
+}
+
+.image{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: yellowgreen;
+}
+
+.layout{
+  position: relative;
+  z-index: 4;
+  height: 160px;
+  width: 200px;
+}
+
+.edit-img-button{
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.delete-img-button{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+}
+
+.img-name{
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 10px 5px;
+  background: lightgray;
+  text-align: center;
+}

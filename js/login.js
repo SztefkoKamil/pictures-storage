@@ -12,30 +12,36 @@ export default function(){
 
 }
 
-function submitLogin(){
-  const data = {};
+async function submitLogin(){
+  const data = {
+    email: loginEmail.value,
+    password: loginPassword.value
+  };
 
-  data.email = loginEmail.value;
-  data.password = loginPassword.value;
-  console.log(data);
-
-  let loginValidation = checkLogin(data.email, data.password);
+  let loginValidation = checkLogin(data);
+  let loginConfirm = false;
 
   if(loginValidation){
-    sendLoginRequest(data);
+    loginConfirm = await sendLoginRequest(data);
   }
 
-  // window.location.replace(window.location.href + 'html/storage.html');
+  if(loginConfirm === 'success'){
+    console.log('login success, redirect');
+    // window.location.replace(window.location.href + 'html/storage.html');
+  }
+  else if(loginConfirm.message === 'error'){
+    console.log(loginConfirm.error);
+  }
+
 
 
 } // ----- submitLogin function --------------
 
-function checkLogin(email, password){
+function checkLogin(data){
   const emailPattern = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
-  const emailIsValid = emailPattern.test(email);
+  const emailIsValid = emailPattern.test(data.email);
 
   const inputs = document.querySelectorAll('input');
-  console.log(inputs[0]);
 
   inputs.forEach((input) => {
     input.classList.remove('login-error');
@@ -51,7 +57,7 @@ function checkLogin(email, password){
   }
 
   let passValid = false;
-  if(password === '' || password.length < 5){
+  if(data.password === '' || data.password.length < 5){
     inputs[1].classList.add('login-error');
   } else {
     passValid = true;
@@ -61,16 +67,30 @@ function checkLogin(email, password){
     return true;
   }
 
-}
+} // ----- checkLogin function ---------------
 
 function sendLoginRequest(data){
-  const newXHR = new XMLHttpRequest();
-  newXHR.onreadystatechange = function(){
-    if (this.readyState == 4 && this.status == 200) {
-        console.log(response);
-    }
-  }
 
-  newXHR.open("POST", 'php/login.php', true);
-  newXHR.send(data);
-}
+  return new Promise((resolve, reject) => {
+    const newXHR = new XMLHttpRequest();
+
+    newXHR.onreadystatechange = function(){
+      if (this.readyState === 4 && this.status === 200) {
+  
+          if(this.response === 'success'){
+            console.log('login success');
+            resolve('success');
+          } else {
+            console.log('login error');
+            reject({message: 'error', error: this.response});
+          }
+      }
+    }
+
+    const url = `php/login.php?email=${data.email}&password=${data.password}`;
+    newXHR.open("GET", url, true);
+    newXHR.send();
+
+  });
+
+} // ----- sendLoginRequest function -------------

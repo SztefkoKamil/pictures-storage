@@ -1,10 +1,14 @@
 'use strict';
 
-import loginModule from './login.js';
+import {checkIfLogged, listenToSubmit} from './login.js';
+
+console.log(document.location);
+
+checkIfLogged();
 
 window.onload = () => {
 
-  loginModule();
+  listenToSubmit();
 
 
 }

@@ -1,40 +1,32 @@
 const loginForm = document.querySelector('#login-form');
 const loginEmail = document.querySelector('#login-email');
 const loginPassword = document.querySelector('#login-password');
-const loginBtn = document.querySelector('#login-button');
 
-export default function(){
 
+function checkIfLogged(){
+  const url = 'php/login.php?check=logged';
+  sendRequest(url);
+} // ----- checkIfLogged function -------------
+
+function listenToSubmit(){
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     submitLogin();
   });
+} // ----- listenToSubmit -----------------
 
-}
-
-async function submitLogin(){
+function submitLogin(){
   const data = {
     email: loginEmail.value,
     password: loginPassword.value
-  };
+  }
+  const url = `php/login.php?email=${data.email}&password=${data.password}`;
 
   let loginValidation = checkLogin(data);
-  let loginConfirm = false;
 
   if(loginValidation){
-    loginConfirm = await sendLoginRequest(data);
+    sendRequest(url);
   }
-
-  if(loginConfirm === 'success'){
-    console.log('login success, redirect');
-    // window.location.replace(window.location.href + 'html/storage.html');
-  }
-  else if(loginConfirm.message === 'error'){
-    console.log(loginConfirm.error);
-  }
-
-
-
 } // ----- submitLogin function --------------
 
 function checkLogin(data){
@@ -66,31 +58,25 @@ function checkLogin(data){
   if(emailValid && passValid){
     return true;
   }
-
 } // ----- checkLogin function ---------------
 
-function sendLoginRequest(data){
+function sendRequest(url){
+  const newXHR = new XMLHttpRequest();
 
-  return new Promise((resolve, reject) => {
-    const newXHR = new XMLHttpRequest();
+  newXHR.onreadystatechange = function(){
+    if (this.readyState === 4 && this.status === 200) {
 
-    newXHR.onreadystatechange = function(){
-      if (this.readyState === 4 && this.status === 200) {
-  
-          if(this.response === 'success'){
-            console.log('login success');
-            resolve('success');
-          } else {
-            console.log('login error');
-            reject({message: 'error', error: this.response});
-          }
-      }
+        if(this.response === 'success'){
+          window.location.replace(window.location.href + 'html/storage.html');
+        } else {
+          console.log('login error');
+          console.log(this.response);
+        }
     }
+  };
 
-    const url = `php/login.php?email=${data.email}&password=${data.password}`;
-    newXHR.open("GET", url, true);
-    newXHR.send();
+  newXHR.open("GET", url, true);
+  newXHR.send();
+} // ----- sendRequest function ------------------
 
-  });
-
-} // ----- sendLoginRequest function -------------
+export {checkIfLogged, listenToSubmit}

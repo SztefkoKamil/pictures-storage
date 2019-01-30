@@ -74,10 +74,11 @@
   width: 200px;
 }
 
-.edit-img-button{
+.download-img-button{
   width: 30px;
   height: 30px;
   cursor: pointer;
+
 }
 
 .delete-img-button{
@@ -92,7 +93,17 @@
   position: absolute;
   bottom: 0px;
   width: 100%;
-  padding: 10px 5px;
+  padding: 8px 30px 7px 0px;
   background: lightgray;
   text-align: center;
+  font-weight: 400;
+}
+
+.edit-img-button{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  cursor: pointer;
 }

@@ -8,16 +8,18 @@
     <title>Pictures Storage</title>
     <link href="../css/common.css" type="text/css" rel="stylesheet">
     <link href="../css/storage.css" type="text/css" rel="stylesheet">
+    <script type="module" src="../js/main.js"></script>
 </head>
 <body>
     <div class="container">
       <div class="action-bar" id="action-bar">
-        <h3>Witaj guest!<br> Dodaj zdjęcie do swojej kolekcji.
+        <h3 id="welcome-message">Witaj guest!<br> Dodaj zdjęcie do swojej kolekcji.
         </h3>
         <div class="upload-field">
-            <div>
-                <button class="upload-button" id="upload-button">Dodaj zdjęcie z dysku</button>
-            </div>
+            <form id="upload-form" method="post" enctype="multipart/form-data">
+                <input type="file" name="images[]" multiple id="upload-input">
+                <button class="upload-button" id="upload-button" type="submit">Dodaj zdjęcie z dysku</button>
+            </form>
             <span>lub</span>
             <div class="drop-field" id="drop-field">Upuść zdjęcie tutaj!</div>
         </div>

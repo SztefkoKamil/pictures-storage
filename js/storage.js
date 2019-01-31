@@ -30,6 +30,36 @@ function actionListeners(){
 } // ----- actionListeners function ---------------------
 
 
+function optionsListeners(){
+  const imgDloadBtns = document.querySelectorAll('.download-img-button');
+  const imgDeleteBtns = document.querySelectorAll('.delete-img-button');
+  const imgEditBtns = document.querySelectorAll('.edit-img-button');
+  
+  imgDloadBtns.forEach((btn) => {
+    const id = btn.parentNode.parentNode.getAttribute("data-id");
+    btn.addEventListener('click', function(){
+      console.log('download image id: '+id);
+    });
+  });
+  
+  imgDeleteBtns.forEach((btn) => {
+    const id = btn.parentNode.parentNode.getAttribute("data-id");
+    btn.addEventListener('click', function(){
+      console.log('delete image id: '+id);
+    });
+  });
+
+  imgEditBtns.forEach((btn) => {
+    const id = btn.parentNode.parentNode.getAttribute("data-id");
+    btn.addEventListener('click', function(){
+      console.log('edit image id: '+id);
+    });
+  });
+
+
+} // ----- optionsListeners function ----------------
+
+
 function savePictures(data){
   const formData = new FormData();
 
@@ -149,11 +179,16 @@ function showPictures(data){
   
   }
 
+  optionsListeners();
+
 } // ----- showPictures function -------------------
 
 function doRequest(data){
+  // data: url, action, method, body
 
-  // fetch().then()
+  fetch(data.url, {method: data.method, body: data.body!='none'?data.body:{}}).then(response => {
+    console.log(response);
+  });
 
 }
 

@@ -8,14 +8,20 @@ require_once "db_connect.php";
 $db = array('host'=>$host, 'user'=>$db_user, 'password'=>$db_password, 'name'=>$db_name);
 
 
-if(isset($_GET['action']) && $_GET['action']==='loadAccount'){
+if(isset($_GET['action']) && $_GET['action']==='load-account'){
   echo 'loaded'.$_SESSION["name"];
 }
-else if(isset($_GET['action']) && $_GET['action']==='loadPictures'){
+else if(isset($_GET['action']) && $_GET['action']==='load-pictures'){
   getStoredPictures($db, $_SESSION);
 }
+else if(isset($_GET['action']) && $_GET['action']==='logout-user'){
+  echo 'logout-user-success';
+}
+else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
+  echo 'delete-user-success';
+}
 else if(isset($_FILES)){
-  echo 'savePictures';
+  echo 'readyToLoad';
   // savePictures($db, $_SESSION, $_FILES);
 }
 
@@ -52,6 +58,7 @@ function getStoredPictures($db, $session){
   mysqli_close($connection);
 
   echo json_encode($fetchedData);
+  // echo "ssss";
 }
 
 

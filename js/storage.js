@@ -12,14 +12,24 @@ const storageContainer = document.querySelector('#storage-container');
 function actionListeners(){
   logoutBtn.onclick = () => {
     console.log('logout');
+    const data = {
+      url: '../php/storage.php?action=logout-user',
+      method: 'GET',
+      body: 'none'
+    }
+
+    doRequest(data);
   };
   
   deleteUserBtn.onclick = () => {
     console.log('delete user');
-  };
-  
-  uploadBtn.onclick = () => {
-    console.log('upload picture');
+    const data = {
+      url: '../php/storage.php?action=delete-user',
+      method: 'GET',
+      body: 'none'
+    }
+
+    doRequest(data);
   };
 
   uploadForm.onsubmit = (e) => {
@@ -60,71 +70,86 @@ function optionsListeners(){
 } // ----- optionsListeners function ----------------
 
 
-function savePictures(data){
-  const formData = new FormData();
+function doRequest(data){
 
-  for(let i=0; i<data.length; i++){
-    let file = data[i];
-    formData.append('images[]', file);
-  }
+  if(data.body === "none"){
+    fetch(data.url, {method: data.method}).then(response => {
+      return response.text();
+    }).then((resp) => { 
+      // console.log(resp);
 
-  const url = '../php/storage.php'
-  const newXHR = new XMLHttpRequest();
-
-  newXHR.onreadystatechange = function(){
-    if (this.readyState === 4 && this.status === 200) {
-
-        console.log(this.response);
-
-        if(this.response === 'readyToLoad'){
-          loadPictures();
-        }
-
-    }
-  };
-
-  newXHR.open("POST", url, true);
-  newXHR.send(formData);
-} // ----- savePictures function -----------------
-
-
-function loadAccount(){
-  const newXHR = new XMLHttpRequest();
-  const url = '../php/storage.php?action=loadAccount'
-
-  newXHR.onreadystatechange = function(){
-    if (this.readyState === 4 && this.status === 200) {
-      // console.log(this.response);
-
-      if(/^loaded/.test(this.response) && this.response.length > 10){
-        const user = this.response.slice(6);
+      if(/^loaded/.test(resp) && resp.length > 10){
+        const user = resp.slice(6);
         loadPictures();
         welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.`;
       }
-    }
+      else if(resp === 'logout-user-success'){
+        console.log('user logged out');
+      }
+      else if(resp === 'delete-user-success'){
+        console.log('user deleted');
+      }
+      else {
+        showPictures(JSON.parse(resp));
+      }
+
+     });
+  } else {
+    fetch(data.url, {method: data.method, body: data.body}).then(response => {
+      return response.text();
+    }).then((resp) => {
+      console.log(resp);
+      if(resp === 'readyToLoad'){
+        loadPictures();
+      }
+    });
+
+  }
+
+} // ----- doRequest function -------------------
+
+
+function loadAccount(){
+  const data = {
+    url: '../php/storage.php?action=load-account',
+    method: 'GET',
+    body: 'none'
   };
 
-  newXHR.open("GET", url, true);
-  newXHR.send();
+  doRequest(data);
 
 } // ----- loadAccount function --------------------
 
 
 function loadPictures(){
-
-  const newXHR = new XMLHttpRequest();
-  const url = '../php/storage.php?action=loadPictures'
-
-  newXHR.onreadystatechange = function(){
-    if (this.readyState === 4 && this.status === 200) {
-      // console.log(this.response);
-      showPictures(JSON.parse(this.response));
-    }
+  const data = {
+    url: '../php/storage.php?action=load-pictures',
+    method: 'GET',
+    body: 'none'
   };
 
-  newXHR.open("GET", url, true);
-  newXHR.send();
+  doRequest(data);
+
 } /// ----- loadPictures function -----------------
+
+
+function savePictures(files){
+  const formData = new FormData();
+
+  for(let i=0; i<files.length; i++){
+    let file = files[i];
+    formData.append('images[]', file);
+  }
+
+  const data = {
+    url: '../php/storage.php',
+    method: 'POST',
+    body: formData
+  };
+
+  doRequest(data);
+
+} // ----- savePictures function -----------------
 
 
 function showPictures(data){
@@ -183,14 +208,6 @@ function showPictures(data){
 
 } // ----- showPictures function -------------------
 
-function doRequest(data){
-  // data: url, action, method, body
-
-  fetch(data.url, {method: data.method, body: data.body!='none'?data.body:{}}).then(response => {
-    console.log(response);
-  });
-
-}
 
 
 

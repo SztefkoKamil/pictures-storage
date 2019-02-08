@@ -15,7 +15,7 @@ else if(isset($_GET['action']) && $_GET['action']==='load-pictures'){
   getStoredPictures($db, $_SESSION);
 }
 else if(isset($_GET['action']) && $_GET['action']==='logout-user'){
-  echo 'logout-user-success';
+  logoutUser();
 }
 else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
   echo 'delete-user-success';
@@ -59,6 +59,16 @@ function getStoredPictures($db, $session){
 
   echo json_encode($fetchedData);
   // echo "ssss";
+}
+
+
+
+function logoutUser(){
+  session_unset();
+  session_destroy();
+  unset($_COOKIE["PHPSESSID"]);
+
+  echo 'logout-user-success';
 }
 
 

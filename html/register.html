@@ -8,6 +8,8 @@
     <title>Pictures Storage</title>
     <link href="../css/common.css" type="text/css" rel="stylesheet">
     <link href="../css/register.css" type="text/css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script type="module" src="../js/main.js"></script>
 </head>
 <body>
     <div class="container">
@@ -24,17 +26,16 @@
         <label class="space" for="pass-repeat">Powtórz hasło</label>
         <input id="pass-repeat" type="password">
         <div class="space">
-            <input id="rules" type="checkbox">
+            <input id="rules" type="checkbox" value="xyz">
             <label class="rules-label" for="rules">Akceptuję regulamin</label>
         </div>
         <button class="rules-button" id="rules-button">Przeczytaj regulamin</button>
-        <div class="register-captcha space">
-            CAPTCHA
+        <div class="register-captcha space" id="register-captcha">
         </div>
         <div class="register-info">
 
         </div>
-        <button class="register-button" id="register-button">Zarejestruj</button>
+        <button type="submit" class="register-button" id="register-button" disabled="disabled">Zarejestruj</button>
       </form>
     </div>
 </body>

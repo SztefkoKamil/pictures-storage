@@ -76,7 +76,7 @@ function doRequest(data){
     fetch(data.url, {method: data.method}).then(response => {
       return response.text();
     }).then((resp) => { 
-      // console.log(resp);
+      console.log(resp);
 
       if(/^loaded/.test(resp) && resp.length > 10){
         const user = resp.slice(6);
@@ -84,7 +84,10 @@ function doRequest(data){
         welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.`;
       }
       else if(resp === 'logout-user-success'){
-        console.log('user logged out');
+        // console.log('user logged out');
+        // console.log(window.location.href.slice(0,-17));
+
+        window.location.replace(window.location.href.slice(0,-17));
       }
       else if(resp === 'delete-user-success'){
         console.log('user deleted');

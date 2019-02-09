@@ -78,7 +78,9 @@
   width: 30px;
   height: 30px;
   cursor: pointer;
-
+  color: #000;
+  background: #eee;
+  padding: 3px;
 }
 
 .delete-img-button{

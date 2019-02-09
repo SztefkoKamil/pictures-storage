@@ -18,15 +18,21 @@ else if(isset($_GET['action']) && $_GET['action']==='logout-user'){
   session_destroy();
   echo 'logout-user-success';
 }
+else if(isset($_POST["id"]) && isset($_POST['new-name'])){
+  editImage($_POST['id'], $_POST['new-name'], $_SESSION["id"], $connection);
+}
 else if(isset($_GET['action']) && $_GET['action']==='delete-image' && isset($_GET['imageID'])){
   deleteImage($_GET['imageID'], $connection);
 }
 else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
   echo 'delete-user-success';
 }
-else if(isset($_FILES)){
+else if(isset($_FILES['images'])){
   // echo 'readyToLoad';
   savePictures($_SESSION, $_FILES, $connection);
+}
+else{
+  print_r('nothing');
 }
 
 
@@ -56,6 +62,14 @@ function getStoredPictures($session, $connection){
 
   echo json_encode($fetchedData);
   // echo "ssss";
+}
+
+function editImage($imgID, $newName, $id, $connection){
+  $query = 'UPDATE storage'.$id.' SET img_name="'.$newName.'" WHERE id='.$imgID;
+  $response = mysqli_query($connection, $query);
+  if($response){
+    echo "edit-name-success";
+  }
 }
 
 

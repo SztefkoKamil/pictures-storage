@@ -7,6 +7,7 @@ const uploadForm   = document.querySelector('#upload-form');
 const uploadInput   = document.querySelector('#upload-input');
 
 const storageContainer = document.querySelector('#storage-container');
+let newName = false;
 
 
 function actionListeners(){
@@ -41,16 +42,10 @@ function actionListeners(){
 
 
 function optionsListeners(){
-  const imgDloadBtns = document.querySelectorAll('.download-img-button');
+  // const imgDloadBtns = document.querySelectorAll('.download-img-button');
   const imgDeleteBtns = document.querySelectorAll('.delete-img-button');
   const imgEditBtns = document.querySelectorAll('.edit-img-button');
-  
-  imgDloadBtns.forEach((btn) => {
-    const id = btn.parentNode.parentNode.getAttribute("data-id");
-    btn.addEventListener('click', function(){
-      console.log('download image id: '+id);
-    });
-  });
+
   
   imgDeleteBtns.forEach((btn) => {
     const id = btn.parentNode.parentNode.getAttribute("data-id");
@@ -68,8 +63,9 @@ function optionsListeners(){
 
   imgEditBtns.forEach((btn) => {
     const id = btn.parentNode.parentNode.getAttribute("data-id");
+    const extension = btn.getAttribute("data-ext");
     btn.addEventListener('click', function(){
-      console.log('edit image id: '+id);
+      editImgName(id, extension);
     });
   });
 
@@ -91,9 +87,6 @@ function doRequest(data, thiss){
         welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.`;
       }
       else if(resp === 'logout-user-success'){
-        // console.log('user logged out');
-        // console.log(window.location.href.slice(0,-17));
-
         window.location.replace(window.location.href.slice(0,-17));
       }
       else if(/^delete-image-/.test(resp)){
@@ -103,12 +96,13 @@ function doRequest(data, thiss){
       else if(resp === 'delete-user-success'){
         console.log('user deleted');
       }
-      // else if(/^\[\{"id"/.test(JSON.parse(resp))){
-      //   showPictures(JSON.parse(resp));
-      // }
       else {
-        console.log(resp);
-        showPictures(JSON.parse(resp));
+        if(JSON.parse(resp)){
+          showPictures(JSON.parse(resp));
+        }
+        else {
+          console.log(resp);
+        }
       }
 
      });
@@ -119,6 +113,9 @@ function doRequest(data, thiss){
       console.log(resp);
       if(resp === 'readyToLoad'){
         loadPictures();
+      }
+      else if(resp === 'edit-name-success'){
+        editImgName('', '');
       }
     });
 
@@ -176,6 +173,40 @@ function savePictures(files){
 } // ----- savePictures function -----------------
 
 
+function editImgName(id, extension){
+  if(!newName){
+    const element = document.querySelector(`[data-id="${id}"] .img-name`);
+    newName = {};
+    newName.name = prompt('Wpisz nową nazwę', element.innerText);
+    newName.id = id;
+    newName.extension = extension;
+
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('new-name', newName.name + extension);
+    const data = {
+      url: `../php/storage.php`,
+      method: 'POST',
+      body: formData
+    };
+
+    doRequest(data);
+  }
+  else {
+    console.log(newName);
+    const element = document.querySelector(`[data-id="${newName.id}"] .img-name`);
+    element.innerText = newName.name;
+    newName = false;
+  }
+} // ----- editImgName function -------------------
+
+
+function deleteImage(thiss){
+  const imgcontainer = thiss.parentNode.parentNode;
+  let x = storageContainer.removeChild(imgcontainer);
+};
+
+
 function showPictures(data){
   storageContainer.innerHTML = "";
 
@@ -193,9 +224,11 @@ function showPictures(data){
 
     const options = [];
 
-    const newDloadBtn = document.createElement('button');
+    const newDloadBtn = document.createElement('a');
     newDloadBtn.classList.add("download-img-button");
-    newDloadBtn.id = "download-img-button";
+    // newDloadBtn.id = "download-img-button";
+    newDloadBtn.setAttribute("href", "data:image;base64,"+data[i]["img"]);
+    newDloadBtn.setAttribute("download", data[i]["img_name"]);
     newDloadBtn.innerText = "DL";
     options.push(newDloadBtn);
 
@@ -204,16 +237,35 @@ function showPictures(data){
     newDeleteBtn.id = "delete-img-button";
     newDeleteBtn.innerText = "DE";
     options.push(newDeleteBtn);
-    
+
+    let name = '';
+    let extension = '';
+    if(/(.jpg|.png|.gif)$/.test(data[i]["img_name"])){
+      name = data[i]["img_name"].slice(0, -4);
+      if(/.jpg$/.test(data[i]["img_name"])){
+        extension = '.jpg';
+      }
+      else if(/.png$/.test(data[i]["img_name"])){
+        extension = '.png';
+      }
+      else if(/.gif$/.test(data[i]["img_name"])){
+        extension = '.gif';
+      }
+    }
+    else if(/.jpeg$/.test(data[i]["img_name"])){
+      name = data[i]["img_name"].slice(0, -5);
+      extension = '.jpeg';
+    }
     const newImgName = document.createElement('h5');
     newImgName.classList.add("img-name");
     newImgName.id = "img-name";
-    newImgName.innerText = "Nazwa zdjęcia";
+    newImgName.innerText = name;
     options.push(newImgName);
-
+    
     const newEditBtn = document.createElement('button');
     newEditBtn.classList.add("edit-img-button");
     newEditBtn.id = "edit-img-button";
+    newEditBtn.setAttribute("data-ext", extension);
     newEditBtn.innerText = "E";
     options.push(newEditBtn);
 
@@ -232,11 +284,6 @@ function showPictures(data){
 
 } // ----- showPictures function -------------------
 
-
-function deleteImage(thiss){
-  const imgcontainer = thiss.parentNode.parentNode;
-  let x = storageContainer.removeChild(imgcontainer);
-};
 
 
 export {loadAccount, actionListeners};

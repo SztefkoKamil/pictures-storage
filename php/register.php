@@ -57,7 +57,6 @@ function createTable($data, $connection){
 
 
 function  createSession($data){
-  session_set_cookie_params(60);
   session_start();
   $_SESSION["id"] = $data["id"];
   $_SESSION["email"] = $data["email"];

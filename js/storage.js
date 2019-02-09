@@ -55,7 +55,14 @@ function optionsListeners(){
   imgDeleteBtns.forEach((btn) => {
     const id = btn.parentNode.parentNode.getAttribute("data-id");
     btn.addEventListener('click', function(){
-      console.log('delete image id: '+id);
+      // console.log('delete image id: '+id);
+      const data = {
+        url: '../php/storage.php?action=delete-image&imageID=' + id,
+        method: 'GET',
+        body: 'none'
+      }; 
+
+      doRequest(data, this);
     });
   });
 
@@ -70,13 +77,13 @@ function optionsListeners(){
 } // ----- optionsListeners function ----------------
 
 
-function doRequest(data){
+function doRequest(data, thiss){
 
   if(data.body === "none"){
     fetch(data.url, {method: data.method}).then(response => {
       return response.text();
     }).then((resp) => { 
-      console.log(resp);
+      // console.log(resp);
 
       if(/^loaded/.test(resp) && resp.length > 10){
         const user = resp.slice(6);
@@ -89,10 +96,18 @@ function doRequest(data){
 
         window.location.replace(window.location.href.slice(0,-17));
       }
+      else if(/^delete-image-/.test(resp)){
+        // console.log(resp);
+        deleteImage(thiss);
+      }
       else if(resp === 'delete-user-success'){
         console.log('user deleted');
       }
+      // else if(/^\[\{"id"/.test(JSON.parse(resp))){
+      //   showPictures(JSON.parse(resp));
+      // }
       else {
+        console.log(resp);
         showPictures(JSON.parse(resp));
       }
 
@@ -137,20 +152,26 @@ function loadPictures(){
 
 
 function savePictures(files){
-  const formData = new FormData();
 
-  for(let i=0; i<files.length; i++){
-    let file = files[i];
-    formData.append('images[]', file);
+  if(files.length > 0){
+    const formData = new FormData();
+
+    for(let i=0; i<files.length; i++){
+      let file = files[i];
+      formData.append('images[]', file);
+    }
+
+    const data = {
+      url: '../php/storage.php',
+      method: 'POST',
+      body: formData
+    };
+
+    doRequest(data);
   }
-
-  const data = {
-    url: '../php/storage.php',
-    method: 'POST',
-    body: formData
-  };
-
-  doRequest(data);
+  else {
+    console.log('no pictures chosen');
+  }
 
 } // ----- savePictures function -----------------
 
@@ -212,6 +233,10 @@ function showPictures(data){
 } // ----- showPictures function -------------------
 
 
+function deleteImage(thiss){
+  const imgcontainer = thiss.parentNode.parentNode;
+  let x = storageContainer.removeChild(imgcontainer);
+};
 
 
 export {loadAccount, actionListeners};

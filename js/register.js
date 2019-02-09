@@ -35,6 +35,9 @@ function actionListener(){
 
 } // ----- actionListener function --------------
 
+const expired = function(){
+  registerBtn.setAttribute('disabled', 'disabled');
+}
 
 const recaptcha = function(token){
   // console.log(token);
@@ -59,11 +62,6 @@ const recaptcha = function(token){
   });
 } // ----- recaptcha function -------------
 
-const expired = function(){
-  registerBtn.setAttribute('disabled', 'disabled');
-}
-
-
 
 
 function getData(){
@@ -76,7 +74,6 @@ function getData(){
 
   return data;
 }
-
 
 function checkData(data){
   const emailPattern = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
@@ -116,9 +113,8 @@ function checkData(data){
 
 } // -----checkData function --------------
 
-
 function doRequest(data){
-  console.log(data);
+  // console.log(data);
 
   const formData = new FormData();
   formData.append("name", data.name);
@@ -132,8 +128,13 @@ function doRequest(data){
     return response.text();
   }).then(response => {
     console.log(response);
+    if(response === 'redirect'){
+      let href = window.location.href.slice(0,-13);
+      href += 'storage.html';
+      window.location.replace(href);
+    }
   });;
 }
 
 
-export {actionListener, recaptcha};
+export {actionListener};

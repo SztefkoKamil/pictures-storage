@@ -61,22 +61,17 @@ function checkLogin(data){
 } // ----- checkLogin function ---------------
 
 function sendRequest(url){
-  const newXHR = new XMLHttpRequest();
 
-  newXHR.onreadystatechange = function(){
-    if (this.readyState === 4 && this.status === 200) {
-
-        if(this.response === 'success'){
-          window.location.replace(window.location.href + 'html/storage.html');
-        } else {
-          console.log('login error');
-          console.log(this.response);
-        }
+  fetch(url, {method: 'GET'}).then(response => {
+    return response.text();
+  }).then(response => {
+    if(response === 'success'){
+      window.location.replace(window.location.href + 'html/storage.html');
+    } else {
+      console.log('login error');
+      console.log(response);
     }
-  };
-
-  newXHR.open("GET", url, true);
-  newXHR.send();
+  });
 } // ----- sendRequest function ------------------
 
 export {checkIfLogged, listenToSubmit}

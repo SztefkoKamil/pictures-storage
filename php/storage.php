@@ -1,7 +1,9 @@
 <?php
 
-session_set_cookie_params(600);
+session_set_cookie_params(60);
 session_start();
+
+checkSession();
 
 require_once "db_connect.php";
 
@@ -42,15 +44,15 @@ function savePictures($db, $session, $files){
   }
 
   mysqli_close($connection);
+  
+  getStoredPictures($db, $session);
 
-  echo 'readyToLoad';
+  // echo 'readyToLoad';
 }
 
 
-
-
 function getStoredPictures($db, $session){
-  $query = 'SELECT * FROM storage_id'.$session["id"];
+  $query = 'SELECT * FROM storage'.$session["id"];
 
   $connection = mysqli_connect($db["host"], $db["user"], $db["password"], $db["name"]);
   $response = mysqli_query($connection, $query);
@@ -62,16 +64,20 @@ function getStoredPictures($db, $session){
 }
 
 
-
 function logoutUser(){
-  session_unset();
   session_destroy();
-  unset($_COOKIE["PHPSESSID"]);
 
   echo 'logout-user-success';
 }
 
-
+function checkSession(){
+  if((time() - $_SESSION["start-time"]) > 600){
+    die("logout-user-success");
+  }
+  else {
+    $_SESSION["start-time"] = time();
+  }
+}
 
 
 ?>

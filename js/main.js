@@ -2,7 +2,7 @@
 
 import {checkIfLogged, listenToSubmit} from './login.js';
 import {loadAccount, actionListeners} from './storage.js';
-import {actionListener, recaptcha} from './register.js';
+import {actionListener} from './register.js';
 
 if(/storage.html$/.test(document.location.href)){
   console.log('storage.js');

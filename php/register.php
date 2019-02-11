@@ -17,6 +17,12 @@ else if(isset($_POST["email"])){
   $connection = mysqli_connect($host, $db_user, $db_password, $db_name);
   // print_r($_POST);
 
+  $limit = checkUsersLimit($connection);
+
+  if($limit){
+    die("too-many-users");
+  }
+
   $check = existEmail($_POST["email"], $connection);
 
   if($check){
@@ -34,6 +40,7 @@ else if(isset($_POST["email"])){
   if(!$check){
     die("wrong-data");
   }
+  // die("good-data");
 
   $email = addToDB($_POST, $connection);
   $data = false;
@@ -57,6 +64,20 @@ else if(isset($_POST["email"])){
 }
 else {
   echo 'no POST data';
+} // ----- main if ----------------------------------------
+
+
+function checkUsersLimit($connection){
+  $query = 'SELECT * FROM users';
+  $response = mysqli_query($connection, $query);
+  $fetchedData = mysqli_fetch_assoc($response);
+
+  if(count($fetchedData) >= 10){
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 
@@ -70,7 +91,7 @@ function existEmail($email, $connection){
   else {
     return false;
   }
-}
+} // ----- existEmail function ---------------------------
 
 
 function checkData($data){
@@ -90,7 +111,7 @@ function checkData($data){
   }
 
   return $ok;
-}
+} // ----- checkData function ---------------------------
 
 
 function addToDB($data, $connection){
@@ -100,8 +121,7 @@ function addToDB($data, $connection){
   if($response){
     return $data["email"];
   }
-
-}
+} // ----- addToDB function ---------------------------
 
 
 function checkID($email, $connection){
@@ -122,7 +142,7 @@ function createTable($data, $connection){
   if($response){
     return "success";
   }
-}
+} // ----- createTable function ---------------------------
 
 
 function  createSession($data){
@@ -133,7 +153,7 @@ function  createSession($data){
   $_SESSION["name"] = $data["name"];
   $_SESSION["start-time"] = time();
   echo "redirect";
-}
+} // ----- createSession function ---------------------------
 
 
 ?>

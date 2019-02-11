@@ -134,7 +134,10 @@ function doRequest(data){
       window.location.replace(href);
     }
     else if(response === 'user-exist'){
-      console.log(response);
+      console.log('this user exist');
+    }
+    else if(response === 'too-many-users'){
+      console.log('users limit 10');
     }
     else{
       console.log(response);

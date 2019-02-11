@@ -126,6 +126,12 @@ function doRequest(data, thiss){
       else if(resp === 'edit-name-success'){
         editImgName('', '');
       }
+      else if(resp === 'too-many-images'){
+        console.log('pictures limit 12');
+      }
+      else {
+        console.log(resp);
+      }
     });
 
   }

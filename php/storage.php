@@ -13,7 +13,7 @@ if(isset($_GET['action']) && $_GET['action']==='load-account'){
   echo 'loaded'.$_SESSION["name"];
 }
 else if(isset($_GET['action']) && $_GET['action']==='load-pictures'){
-  getStoredPictures($_SESSION, $connection);
+  $_SESSION["counter"] = getStoredPictures($_SESSION, $connection);
 }
 else if(isset($_GET['action']) && $_GET['action']==='logout-user'){
   session_destroy();
@@ -30,8 +30,12 @@ else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
   deleteUser($_SESSION["id"], $connection);
 }
 else if(isset($_FILES['images'])){
-  // echo 'readyToLoad';
-  savePictures($_SESSION, $_FILES, $connection);
+  if($_SESSION["counter"] >= 12){
+    echo "too-many-images";
+  }
+  else {
+    savePictures($_SESSION, $_FILES, $connection);
+  }
 }
 else{
   print_r('nothing');
@@ -63,6 +67,8 @@ function getStoredPictures($session, $connection){
   $fetchedData = mysqli_fetch_all($response, MYSQLI_ASSOC);
 
   echo "json-".json_encode($fetchedData);
+
+  return count($fetchedData);
   // echo "ssss";
 }
 
@@ -79,6 +85,7 @@ function deleteImage($id, $connection){
   $query = 'DELETE FROM storage'.$_SESSION["id"].' WHERE id='.$id;
   $response = mysqli_query($connection, $query);
   if($response){
+    $_SESSION["counter"]--;
     echo "delete-image-".$id;
   }
 }

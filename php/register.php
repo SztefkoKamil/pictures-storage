@@ -16,8 +16,36 @@ else if(isset($_POST["email"])){
   require_once "db_connect.php";
   $connection = mysqli_connect($host, $db_user, $db_password, $db_name);
   // print_r($_POST);
-  // addToDB($_POST, $connection);
-  checkID($_POST["email"], $connection);
+
+  $check = checkEmail($_POST["email"], $connection);
+
+  if($check){
+    die("user-exist");
+  }
+
+
+  $email = addToDB($_POST, $connection);
+  $data = false;
+
+  if($email){
+    $data = checkID($email, $connection);
+  }
+
+  if($data){
+    $table = createTable($data["id"], $connection);
+  }
+  else {
+    $register = false;
+  }
+
+  if($rtable === "success"){
+    createSession($data);
+  }
+
+
+
+
+  // checkID($_POST["email"], $connection);
   // check if email exist, add to db, check id, create table,
 
   mysqli_close($connection);
@@ -27,12 +55,25 @@ else {
 }
 
 
+function checkEmail($email, $connection){
+  $query = 'SELECT * FROM users WHERE email="'.$email.'"';
+  $response = mysqli_query($connection, $query);
+  $fetchedData = mysqli_fetch_assoc($response);
+  if($fetchedData){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
 function addToDB($data, $connection){
   $query = 'INSERT INTO users VALUES(null, "'.$data["name"].'", "'.$data["email"].'", "'.$data["password"].'")';
   $response = mysqli_query($connection, $query);
 
   if($response){
-    checkID($data["email"], $connection);
+    return $data["email"];
   }
 
 }
@@ -43,16 +84,19 @@ function checkID($email, $connection){
   $response = mysqli_query($connection, $query);
   $fetchedData = mysqli_fetch_assoc($response);
   // print_r($fetchedData);
-  // createTable($fetchedData, $connection);
-  createSession($fetchedData);
+  // createSession($fetchedData);
+  return $fetchedData;
 }
 
 
 function createTable($data, $connection){
-  $query = 'CREATE TABLE storage'.$data["id"].'(id int NOT NULL AUTO_INCREMENT PRIMARY KEY, owner text NOT NULL, img_name text NOT NULL, img longblob NOT NULL, img_size text NOT NULL)';
+  $query = 'CREATE TABLE storage'.$data.'(id int NOT NULL AUTO_INCREMENT PRIMARY KEY, owner text NOT NULL, img_name text NOT NULL, img longblob NOT NULL, img_size text NOT NULL)';
   $response = mysqli_query($connection, $query);
 
-  createSession($data);
+  // createSession($data);
+  if($response){
+    return "success";
+  }
 }
 
 

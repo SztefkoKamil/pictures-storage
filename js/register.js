@@ -127,11 +127,17 @@ function doRequest(data){
   }).then(response => {
     return response.text();
   }).then(response => {
-    console.log(response);
+    // console.log(response);
     if(response === 'redirect'){
       let href = window.location.href.slice(0,-13);
       href += 'storage.html';
       window.location.replace(href);
+    }
+    else if(response === 'user-exist'){
+      console.log(response);
+    }
+    else{
+      console.log(response);
     }
   });;
 }

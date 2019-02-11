@@ -100,13 +100,18 @@ function doRequest(data, thiss){
         // console.log(resp);
         deleteImage(thiss);
       }
-      else {
-        console.log(resp);
-        if(JSON.parse(resp)){
-          showPictures(JSON.parse(resp));
+      else if(/^json-/.test(resp)){
+        const response = resp.slice(5);
+
+        if(JSON.parse(response)){
+          showPictures(JSON.parse(response));
         }
         else {
+          console.log(response);
         }
+      }
+      else{
+        console.log(resp);
       }
 
      });

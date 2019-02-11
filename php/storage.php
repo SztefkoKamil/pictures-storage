@@ -62,7 +62,7 @@ function getStoredPictures($session, $connection){
   $response = mysqli_query($connection, $query);
   $fetchedData = mysqli_fetch_all($response, MYSQLI_ASSOC);
 
-  echo json_encode($fetchedData);
+  echo "json-".json_encode($fetchedData);
   // echo "ssss";
 }
 
@@ -83,22 +83,22 @@ function deleteImage($id, $connection){
   }
 }
 
-
+// delete user form users table & delete user storage table
 function deleteUser($id, $connection){
-  // $query = 'DROP TABLE storage'.$id;
-  // $response = mysqli_query($connection, $query);
+  $query = 'DROP TABLE storage'.$id;
+  $response = mysqli_query($connection, $query);
 
-  // if($response){
-  //   $query = 'DELETE FROM users WHERE id='.$id;
-  //   $response = mysqli_query($connection, $query);
+  if($response){
+    $query = 'DELETE FROM users WHERE id='.$id;
+    $response = mysqli_query($connection, $query);
 
-  //   if($response){
-  //     session_destroy();
-  //     echo 'logout-user-success';
-  //   }
-  // }
-  session_destroy();
-  echo 'logout-user-success';
+    if($response){
+      session_destroy();
+      echo 'logout-user-success';
+    }
+  }
+  // session_destroy();
+  // echo 'logout-user-success';
 }
 
 

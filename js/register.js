@@ -6,6 +6,9 @@ const passIn = document.querySelector('#password');
 const pass2In = document.querySelector('#pass-repeat');
 const rulesCheck = document.querySelector('#rules');
 const registerBtn = document.querySelector('#register-button');
+const rulesBtn = document.querySelector('#rules-button');
+const registerModal = document.querySelector('#register-modal');
+const registerModalBtn = document.querySelector('#register-modal-button');
 
 
 function actionListener(){
@@ -24,6 +27,14 @@ function actionListener(){
         console.log('form data error');
       }
     }
+  }
+
+  rulesBtn.onclick = () => {
+    registerModal.style.display="flex";
+  }
+
+  registerModalBtn.onclick = () => {
+    registerModal.style.display="none";
   }
 
 

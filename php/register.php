@@ -1,4 +1,5 @@
 <?php
+
 if(isset($_POST["g-recaptcha-response"])){
   $url = 'https://www.google.com/recaptcha/api/siteverify';
   $secret = '6Lcr8o8UAAAAAJdFFd-QyCbA3d1z8NIyoRWrCMuR';
@@ -7,7 +8,6 @@ if(isset($_POST["g-recaptcha-response"])){
 
   $data = json_decode($response);
 
-  // echo '{"success": '.$data->success.', "action": "'.$data->action.'"}';
   echo $data->success;
 
   // print_r($data);
@@ -17,12 +17,23 @@ else if(isset($_POST["email"])){
   $connection = mysqli_connect($host, $db_user, $db_password, $db_name);
   // print_r($_POST);
 
-  $check = checkEmail($_POST["email"], $connection);
+  $check = existEmail($_POST["email"], $connection);
 
   if($check){
     die("user-exist");
   }
 
+  $data = array(
+    'name' => filter_var($_POST["name"], FILTER_SANITIZE_STRING),
+    'email' => filter_var($_POST["email"], FILTER_SANITIZE_STRING),
+    'password' => filter_var($_POST["password"], FILTER_SANITIZE_STRING)
+  );
+
+  $check = checkData($data);
+
+  if(!$check){
+    die("wrong-data");
+  }
 
   $email = addToDB($_POST, $connection);
   $data = false;
@@ -38,15 +49,9 @@ else if(isset($_POST["email"])){
     $register = false;
   }
 
-  if($rtable === "success"){
+  if($table === "success"){
     createSession($data);
   }
-
-
-
-
-  // checkID($_POST["email"], $connection);
-  // check if email exist, add to db, check id, create table,
 
   mysqli_close($connection);
 }
@@ -55,7 +60,7 @@ else {
 }
 
 
-function checkEmail($email, $connection){
+function existEmail($email, $connection){
   $query = 'SELECT * FROM users WHERE email="'.$email.'"';
   $response = mysqli_query($connection, $query);
   $fetchedData = mysqli_fetch_assoc($response);
@@ -65,6 +70,26 @@ function checkEmail($email, $connection){
   else {
     return false;
   }
+}
+
+
+function checkData($data){
+  $pattern = '/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/';
+  $ok = true;
+
+  if(!preg_match($pattern, $data["email"])){
+    $ok = false;
+  }
+
+  if(strlen($data["name"]) < 2){
+    $ok = false;
+  }
+
+  if(strlen($data["password"]) < 6 || strlen($data["password"]) > 24){
+    $ok = false;
+  }
+
+  return $ok;
 }
 
 

@@ -1,5 +1,4 @@
 <?php
-  // session_set_cookie_params(600);
   session_start();
 
 
@@ -9,12 +8,12 @@
     }
   } 
   else if(isset($_GET["email"]) && isset($_GET["password"])) {
+
+    $data = checkData($_GET);
+    $query = 'SELECT * FROM users WHERE email="'.$data["email"].'"';
+    
     require_once "db_connect.php";
-
     $connection = mysqli_connect($host, $db_user, $db_password, $db_name);
-
-    $query = 'SELECT * FROM users WHERE email="'.$_GET["email"].'"';
-
     $response = mysqli_query($connection, $query);
     $result = mysqli_fetch_all($response, MYSQLI_ASSOC);
     mysqli_close($connection);
@@ -29,7 +28,31 @@
       echo 'error';
     }
     
-  }
+  } // ----- main if --------------------------------
+
+
+  function checkData($get){
+
+    $data = array(
+      'email' => filter_var($get["email"], FILTER_SANITIZE_STRING),
+      'password' => filter_var($get["password"], FILTER_SANITIZE_STRING)
+    );
+
+    $pattern = '/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/';
+    $ok = true;
+
+    if(!preg_match($pattern, $data["email"])){
+      $ok = false;
+    }
+  
+    if(strlen($data["password"]) < 6 || strlen($data["password"]) > 24){
+      $ok = false;
+    }
+
+    if($ok){
+      return $data;
+    }
+  } // ----- checkData function -----------------
 
 
 ?>

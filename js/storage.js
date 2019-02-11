@@ -23,14 +23,18 @@ function actionListeners(){
   };
   
   deleteUserBtn.onclick = () => {
-    console.log('delete user');
-    const data = {
-      url: '../php/storage.php?action=delete-user',
-      method: 'GET',
-      body: 'none'
-    }
+    // console.log('delete user');
+    let confirmDelete = confirm('Czy napewno chcesz usunąć konto?');
 
-    doRequest(data);
+    if(confirmDelete){
+      const data = {
+        url: '../php/storage.php?action=delete-user',
+        method: 'GET',
+        body: 'none'
+      }
+  
+      doRequest(data);
+    }
   };
 
   uploadForm.onsubmit = (e) => {
@@ -87,21 +91,21 @@ function doRequest(data, thiss){
         welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.`;
       }
       else if(resp === 'logout-user-success'){
+        const expireDate = new Date();
+        document.cookie = 'PHPSESSID=logout;domain='+window.location.hostname+';path=/;expires='+expireDate.toUTCString();
+        // console.log(document.cookie);
         window.location.replace(window.location.href.slice(0,-17));
       }
       else if(/^delete-image-/.test(resp)){
         // console.log(resp);
         deleteImage(thiss);
       }
-      else if(resp === 'delete-user-success'){
-        console.log('user deleted');
-      }
       else {
+        console.log(resp);
         if(JSON.parse(resp)){
           showPictures(JSON.parse(resp));
         }
         else {
-          console.log(resp);
         }
       }
 
@@ -110,7 +114,7 @@ function doRequest(data, thiss){
     fetch(data.url, {method: data.method, body: data.body}).then(response => {
       return response.text();
     }).then((resp) => {
-      console.log(resp);
+      // console.log(resp);
       if(resp === 'readyToLoad'){
         loadPictures();
       }
@@ -193,7 +197,7 @@ function editImgName(id, extension){
     doRequest(data);
   }
   else {
-    console.log(newName);
+    // console.log(newName);
     const element = document.querySelector(`[data-id="${newName.id}"] .img-name`);
     element.innerText = newName.name;
     newName = false;

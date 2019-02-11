@@ -1,5 +1,6 @@
 <?php
 
+// session_set_cookie_params(600);
 session_start();
 
 checkSession();
@@ -25,7 +26,8 @@ else if(isset($_GET['action']) && $_GET['action']==='delete-image' && isset($_GE
   deleteImage($_GET['imageID'], $connection);
 }
 else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
-  echo 'delete-user-success';
+  // echo 'delete-user-success';
+  deleteUser($_SESSION["id"], $connection);
 }
 else if(isset($_FILES['images'])){
   // echo 'readyToLoad';
@@ -79,6 +81,24 @@ function deleteImage($id, $connection){
   if($response){
     echo "delete-image-".$id;
   }
+}
+
+
+function deleteUser($id, $connection){
+  // $query = 'DROP TABLE storage'.$id;
+  // $response = mysqli_query($connection, $query);
+
+  // if($response){
+  //   $query = 'DELETE FROM users WHERE id='.$id;
+  //   $response = mysqli_query($connection, $query);
+
+  //   if($response){
+  //     session_destroy();
+  //     echo 'logout-user-success';
+  //   }
+  // }
+  session_destroy();
+  echo 'logout-user-success';
 }
 
 

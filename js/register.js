@@ -7,8 +7,13 @@ const pass2In = document.querySelector('#pass-repeat');
 const rulesCheck = document.querySelector('#rules');
 const registerBtn = document.querySelector('#register-button');
 const rulesBtn = document.querySelector('#rules-button');
+const rulesLabel = document.querySelector('#rules-label');
 const registerModal = document.querySelector('#register-modal');
 const registerModalBtn = document.querySelector('#register-modal-button');
+const warningWindow = document.querySelector('#warning-window');
+
+let formErrors = [];
+let position = -60;
 
 
 function actionListener(){
@@ -20,11 +25,12 @@ function actionListener(){
       const data = getData();
       const checked = checkData(data);
   
-      if(checked){
+      if(checked === true){
         doRequest(data);
       }
       else {
-        console.log('form data error');
+        // console.log('form data error');
+        showWarning(checked);
       }
     }
   }
@@ -74,7 +80,6 @@ const recaptcha = function(token){
 } // ----- recaptcha function -------------
 
 
-
 function getData(){
   const data = {};
   data.name = nameIn.value;
@@ -84,42 +89,58 @@ function getData(){
   data.rules = rulesCheck.checked;
 
   return data;
-}
+} // ----- getData function -------------
 
 function checkData(data){
+  nameIn.classList.remove("error-input");
+  emailIn.classList.remove("error-input");
+  passIn.classList.remove("error-input");
+  pass2In.classList.remove("error-input");
+  rulesLabel.style.color = "#000";
+
   const emailPattern = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
   let ok = true;
 
   if(!emailPattern.test(data.email)){
     ok = false;
-    console.log('wrong email');
+    emailIn.classList.add("error-input");
+    // console.log('wrong email');
+    formErrors.push("Podaj poprawny email");
   }
 
   if(data.name.length < 2){
     ok = false;
-    console.log('name to short - min 2 characters');
+    nameIn.classList.add("error-input");
+    // console.log('name to short - min 2 characters');
+    formErrors.push("Imię musi mieć co najmniej 2 znaki");
   }
 
   if(data.pass.length < 6 || data.pass.length > 24){
     ok = false;
-    console.log('password must have min 6 max 24 characters');
+    passIn.classList.add("error-input");
+    // console.log('password must have min 6 max 24 characters');
+    formErrors.push("Hasło musi mieć od 2 do 24 znaków");
   }
 
-  if(data.pass != data.pass2){
+  if(data.pass != data.pass2 || data.pass2.length < 6){
     ok = false;
-    console.log('repeat password');
+    pass2In.classList.add("error-input");
+    // console.log('repeat password');
+    formErrors.push("Powtórz hasło");
   }
 
   if(!data.rules){
     ok = false;
-    console.log('accept terms');
+    rulesLabel.style.color = "red";
+    // console.log('accept terms');
+    formErrors.push("Zaakceptuj regulamin");
   }
 
   if(ok){
     return true;
   }
   else {
-    return false;
+    return formErrors;
   }
 
 } // -----checkData function --------------
@@ -145,15 +166,67 @@ function doRequest(data){
       window.location.replace(href);
     }
     else if(response === 'user-exist'){
-      console.log('this user exist');
+      // console.log('this user exist');
+      showWarning("Użytkownik o takim adresie email już istnieje!");
     }
     else if(response === 'too-many-users'){
-      console.log('users limit 10');
+      // console.log('users limit 10');
+      showWarning("Osiągnięto limit 10 użytkowników!");
     }
     else{
       console.log(response);
     }
   });;
+} // ----- doRequest function -------------
+
+
+function showWarning(data){
+  formErrors = [];
+  let message = '';
+  
+  if(Array.isArray(data)){
+    for(let i in data){
+      message += data[i];
+      
+      if((data.length - i) >= 2){
+        message += ', ';
+      }
+    }
+    message += '!';
+  }
+  else {
+    message = data;
+  }
+  // console.log(message);
+
+  warningWindow.innerText = message;
+  requestAnimationFrame(slideDown);
+  setTimeout(() => {
+    requestAnimationFrame(slideUp);
+  }, 10000);
+
+} // ----- showWarning function --------------
+
+function slideDown(){
+  if(position < 0){
+    position += 2;
+    warningWindow.style.top = position + 'px';
+  
+    if(position <= -2){
+      requestAnimationFrame(slideDown);
+    }
+  }
+}
+
+function slideUp(){
+  if(position > -60){
+    position -= 2;
+    warningWindow.style.top = position + 'px';
+  
+    if(position >= -58){
+      requestAnimationFrame(slideUp);
+    }
+  }
 }
 
 

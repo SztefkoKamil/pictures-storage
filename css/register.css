@@ -12,21 +12,35 @@
   align-items: center;
   border: 1px solid black;
   padding: 20px;
-  box-shadow: 1px 1px 5px 0px gray;
+  box-shadow: 4px 4px 5px 0px gray;
+}
+.register-form input{
+  height: 20px;
+  text-align: center;
 }
 
 .space{
   margin-top: 12px;
 }
 
+.rules-div{
+  display: flex;
+  align-items: center;
+}
+
 .rules-label{
   font-size: 14px;
+  margin-left: 10px;
 }
 
 .rules-button{
   font-size: 12px;
   padding: 2px 5px;
-  margin-top: 5px;
+  margin-top: 10px;
+}
+
+.register-captcha{
+  margin: 30px 0 20px 0;
 }
 
 .register-button{
@@ -55,4 +69,23 @@
   cursor: pointer;
   font-size: 24px;
   font-weight: 700;
+}
+
+.error-input{
+  border: 1px solid red;
+}
+
+.warning-window{
+  position:fixed;
+  width: 600px;
+  height: 60px;
+  top: -60px;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+  background: #fff;
+  border: 1px solid red;
 }

@@ -244,14 +244,26 @@ function showPictures(data){
     // newDloadBtn.id = "download-img-button";
     newDloadBtn.setAttribute("href", "data:image;base64,"+data[i]["img"]);
     newDloadBtn.setAttribute("download", data[i]["img_name"]);
-    newDloadBtn.innerText = "DL";
+    newDloadBtn.setAttribute("title", "Pobierz obrazek");
     options.push(newDloadBtn);
+
+    const newDloadIcon = document.createElement('i');
+    newDloadIcon.classList.add('fa-download');
+    newDloadIcon.classList.add('fas');
+
+    newDloadBtn.appendChild(newDloadIcon);
 
     const newDeleteBtn = document.createElement('button');
     newDeleteBtn.classList.add("delete-img-button");
     newDeleteBtn.id = "delete-img-button";
-    newDeleteBtn.innerText = "DE";
+    newDeleteBtn.setAttribute("title", "Usuń obrazek");
     options.push(newDeleteBtn);
+
+    const newDeleteIcon = document.createElement('i');
+    newDeleteIcon.classList.add('fa-trash-alt');
+    newDeleteIcon.classList.add('fas');
+
+    newDeleteBtn.appendChild(newDeleteIcon);
 
     let name = '';
     let extension = '';
@@ -281,8 +293,14 @@ function showPictures(data){
     newEditBtn.classList.add("edit-img-button");
     newEditBtn.id = "edit-img-button";
     newEditBtn.setAttribute("data-ext", extension);
-    newEditBtn.innerText = "E";
+    newEditBtn.setAttribute("title", "Zmień nazwę obrazka");
     options.push(newEditBtn);
+
+    const newEditIcon = document.createElement('i');
+    newEditIcon.classList.add('fa-edit');
+    newEditIcon.classList.add('fas');
+
+    newEditBtn.appendChild(newEditIcon);
 
     for(let i of options){
       newLayout.appendChild(i);
@@ -293,7 +311,7 @@ function showPictures(data){
 
     storageContainer.appendChild(newContainer);
   
-  }
+  } // ----- for loop -----------------
 
   optionsListeners();
 

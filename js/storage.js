@@ -3,11 +3,14 @@ const welcomeMsg = document.querySelector('#welcome-message');
 const logoutBtn = document.querySelector('#logout-button');
 const deleteUserBtn = document.querySelector('#delete-user-button');
 const uploadBtn = document.querySelector('#upload-button');
-const uploadForm   = document.querySelector('#upload-form');
-const uploadInput   = document.querySelector('#upload-input');
+const uploadForm = document.querySelector('#upload-form');
+const uploadInput = document.querySelector('#upload-input');
+const dropField = document.querySelector('#drop-field');
+const warningWindow = document.querySelector('#warning-window');
 
 const storageContainer = document.querySelector('#storage-container');
 let newName = false;
+let position = -60;
 
 
 function actionListeners(){
@@ -42,6 +45,14 @@ function actionListeners(){
     savePictures(uploadInput.files);
   };
 
+  dropField.addEventListener('drop', (e) => {
+    e.preventDefault();
+    console.log('e');
+    console.log(e);
+  });
+
+
+
 } // ----- actionListeners function ---------------------
 
 
@@ -55,13 +66,16 @@ function optionsListeners(){
     const id = btn.parentNode.parentNode.getAttribute("data-id");
     btn.addEventListener('click', function(){
       // console.log('delete image id: '+id);
-      const data = {
-        url: '../php/storage.php?action=delete-image&imageID=' + id,
-        method: 'GET',
-        body: 'none'
-      }; 
 
-      doRequest(data, this);
+      if(confirm("Usunąć zdjęcie?")){
+        const data = {
+          url: '../php/storage.php?action=delete-image&imageID=' + id,
+          method: 'GET',
+          body: 'none'
+        }; 
+  
+        doRequest(data, this);
+      }
     });
   });
 
@@ -127,7 +141,8 @@ function doRequest(data, thiss){
         editImgName('', '');
       }
       else if(resp === 'too-many-images'){
-        console.log('pictures limit 12');
+        // console.log('pictures limit 12');
+        showWarning("Limit obrazków - 12!<br>Przepraszamy.");
       }
       else {
         console.log(resp);
@@ -222,6 +237,37 @@ function deleteImage(thiss){
 };
 
 
+function showWarning(data){
+  warningWindow.innerHTML = data;
+  requestAnimationFrame(slideDown);
+  setTimeout(() => {
+    requestAnimationFrame(slideUp);
+  }, 10000);
+}
+
+function slideDown(){
+  if(position < 0){
+    position += 2;
+    warningWindow.style.top = position + 'px';
+  
+    if(position <= -2){
+      requestAnimationFrame(slideDown);
+    }
+  }
+}
+
+function slideUp(){
+  if(position > -60){
+    position -= 2;
+    warningWindow.style.top = position + 'px';
+  
+    if(position >= -58){
+      requestAnimationFrame(slideUp);
+    }
+  }
+}
+
+
 function showPictures(data){
   storageContainer.innerHTML = "";
 
@@ -233,6 +279,7 @@ function showPictures(data){
     const newImg = document.createElement('img');
     newImg.classList.add('image');
     newImg.setAttribute("src", "data:image;base64,"+data[i]["img"]);
+    // console.log(newImg.width);
 
     const newLayout = document.createElement('div');
     newLayout.classList.add("layout");

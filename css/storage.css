@@ -32,16 +32,34 @@
 }
 
 .logout-button{
-  width: 120px;
-  height: 50px;
-  font-size: 18px;
+  width: 160px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 700;
   cursor: pointer;
+  padding: 5px 2px 5px 5px;
+}
+.logout-button i{
+  font-size: 30px;
 }
 
 .delete-user-button{
   width: 50px;
+  height: 60px;
   cursor: pointer;
+  font-size: 10px;
+  line-height: 90%;
+  letter-spacing: 2px;
+  font-weight: 700;
 }
+.delete-user-button i{
+  font-size: 30px;
+  padding-bottom: 3px;
+}
+
 
 
 /* ---------------------------------------- */
@@ -50,11 +68,13 @@
   display: flex;
   flex-wrap: wrap;
   padding: 20px;
+  position: relative;
 }
 
 .img-container{
   width: 200px;
   height: 160px;
+  position: absolute;
   margin: 15px;
   box-shadow: 3px 3px 5px 0px gray;
   position: relative;
@@ -110,7 +130,7 @@
   bottom: 0px;
   width: 100%;
   height: 30px;
-  padding: 8px 30px 7px 5px;
+  padding: 8px 32px 7px 5px;
   background: rgba(175, 175, 175, 0.8);
   text-align: center;
   font-weight: 400;
@@ -129,4 +149,19 @@
   background: #eee;
   border: none;
   padding: 5px 2px 5px 5px;
+}
+
+.warning-window{
+  position:fixed;
+  width: 600px;
+  height: 60px;
+  top: -60px;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+  background: #fff;
+  border: 1px solid red;
 }

@@ -30,8 +30,9 @@ else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
   deleteUser($_SESSION["id"], $connection);
 }
 else if(isset($_FILES['images'])){
-  if($_SESSION["counter"] >= 12){
+  if(($_SESSION["counter"] + count($_FILES["images"]["tmp_name"])) > 12){
     echo "too-many-images";
+    // echo count($_FILES["images"]["tmp_name"]);
   }
   else {
     savePictures($_SESSION, $_FILES, $connection);

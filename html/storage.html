@@ -14,6 +14,10 @@
 <body>
     <div class="container">
       <div class="action-bar" id="action-bar">
+        <button class="delete-user-button" id="delete-user-button">
+            <i class="fas fa-user-times"></i>
+            <span>Skasuj konto</span>
+        </button>
         <h3 id="welcome-message">Witaj guest!<br> Dodaj zdjęcie do swojej kolekcji.
         </h3>
         <div class="upload-field">
@@ -22,10 +26,12 @@
                 <button class="upload-button" id="upload-button" type="submit">Dodaj zdjęcie z dysku</button>
             </form>
             <span>lub</span>
-            <div class="drop-field" id="drop-field">Upuść zdjęcie tutaj!</div>
+            <div class="drop-field" id="drop-field" draggable="true">Upuść zdjęcie tutaj!</div>
         </div>
-        <button class="logout-button" id="logout-button">Wyloguj się</button>
-        <button class="delete-user-button" id="delete-user-button">Skasuj konto</button>
+        <button class="logout-button" id="logout-button" draggable="true">
+            <span>Wyloguj się</span>
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
       </div>
       <div class="storage-container" id="storage-container">
           <!-- <div class="img-container data-id="1"">
@@ -38,6 +44,7 @@
               </div>
           </div> -->
       </div>
+      <div class="warning-window" id="warning-window"></div>
     </div>
 </body>
 </html>

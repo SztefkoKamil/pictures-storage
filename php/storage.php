@@ -35,7 +35,16 @@ else if(isset($_FILES['images'])){
     // echo count($_FILES["images"]["tmp_name"]);
   }
   else {
-    savePictures($_SESSION, $_FILES, $connection);
+    savePictures($_SESSION, $_FILES, $connection, "upload");
+  }
+}
+else if(isset($_POST[0])){
+  if(($_SESSION["counter"] + count($_POST)) > 12){
+    echo "too-many-images";
+    // echo count($_FILES["images"]["tmp_name"]);
+  }
+  else {
+    savePictures($_SESSION, $_POST, $connection, "drop");
   }
 }
 else{
@@ -43,23 +52,32 @@ else{
 }
 
 
+function savePictures($session, $files, $connection, $flag){
 
-function savePictures($session, $files, $connection){
-  
-  $size = sizeof($files['images']['tmp_name']);
+  if($flag === "upload"){
+    $size = sizeof($files['images']['tmp_name']);
+  }
+  else if($flag === "drop"){
+    $size = sizeof($files);
+  }
 
   for($i=0; $i<$size; $i++){
-    $image = file_get_contents($files['images']['tmp_name'][$i]);
-    $image = base64_encode($image);
+    if($flag === "upload"){
+      $image = file_get_contents($files['images']['tmp_name'][$i]);
+      $image = base64_encode($image);
+      $query = 'INSERT INTO storage'.$session["id"].' VALUES(null, "'.$session["user"].'", "'.$files['images']['name'][$i].'", "'.$image.'", "'.$files['images']['size'][$i].'")';
+    }
+    else if($flag === "drop"){
+      $files[$i] = json_decode($files[$i]);
+      $query = 'INSERT INTO storage'.$session["id"].' VALUES(null, "'.$session["user"].'", "'.$files[$i]->name.'", "'.$files[$i]->path.'", "'.$files[$i]->size.'")';
+    }
 
-    $query = 'INSERT INTO storage'.$session["id"].' VALUES(null, "'.$session["user"].'", "'.$files['images']['name'][$i].'", "'.$image.'", "'.$files['images']['size'][$i].'")';
     
     $response = mysqli_query($connection, $query);
   }
-  
+
   echo 'readyToLoad';
 }
-
 
 function getStoredPictures($session, $connection){
   $query = 'SELECT * FROM storage'.$session["id"];

@@ -2,10 +2,11 @@
 const welcomeMsg = document.querySelector('#welcome-message');
 const logoutBtn = document.querySelector('#logout-button');
 const deleteUserBtn = document.querySelector('#delete-user-button');
-const uploadBtn = document.querySelector('#upload-button');
 const uploadForm = document.querySelector('#upload-form');
 const uploadInput = document.querySelector('#upload-input');
+const uploadBtn = document.querySelector('#upload-button');
 const dropField = document.querySelector('#drop-field');
+const dropFieldCounter = document.querySelector('#drop-field-counter');
 const warningWindow = document.querySelector('#warning-window');
 
 const storageContainer = document.querySelector('#storage-container');
@@ -42,14 +43,100 @@ function actionListeners(){
 
   uploadForm.onsubmit = (e) => {
     e.preventDefault();
-    savePictures(uploadInput.files);
-  };
+    if(uploadInput.files.length > 0){
+      const filteredData = Array.from(uploadInput.files).filter((a) => {return a.type==="image/jpeg" || a.type==="image.png"});
+      // console.log(filteredData);
+      savePictures(filteredData);
+      uploadForm.reset();
+    };
+  };  // ----- upload files listener -------------
 
-  dropField.addEventListener('drop', (e) => {
+
+  dropField.addEventListener('dragover', (e) => {
+    e.stopPropagation();
     e.preventDefault();
-    console.log('e');
-    console.log(e);
+    e.dataTransfer.dropEffect = 'copy';
+    // console.log('e');
+    // console.log(e.dataTransfer);
+    // console.log(e);
   });
+  dropField.addEventListener('drop', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    // console.log(e.dataTransfer.files);
+    // console.log(e);
+
+    let toggle = true;
+
+    dropFieldCounter.innerText = '';
+
+    let files = e.dataTransfer.files; // Array of all files
+
+    let x = 0;
+    let formData = new FormData();
+    
+    for (let i=0, file; file=files[i]; i++) {
+        if (file.type.match(/image\/jpeg*/) || file.type.match(/image\/png*/)) {
+            
+            let reader = new FileReader();
+            let element = {};
+            element.name = file.name;
+            element.size = file.size;
+            element.type = file.type;
+
+            reader.onload = function(event) {
+                // finished reading file data.
+
+              if(element.type == 'image/jpeg'){
+                element.path = event.target.result.slice(23);
+              }
+              else if(element.type == 'image/png'){
+                element.path = event.target.result.slice(22);
+              }
+
+              formData.append(i, JSON.stringify(element));
+              x++;
+                // console.log(formData.length);
+            }
+
+            reader.readAsDataURL(file); // start reading the file data.
+        }
+    }
+
+    setTimeout(() => {
+      // console.log(formData);
+
+      if(x > 0){
+        let message = 'Wybrano ';
+        if(x == 1){
+          message += '1 obrazek.';
+        }
+        else if(x > 1 && x < 5 ){
+          message += x + ' obrazki.';
+        }
+        else if(x > 4){
+          message += x + ' obrazków.';
+        }
+        dropFieldCounter.innerText = message;
+      }
+
+      const data2 = {
+        url: '../php/storage.php',
+        method: 'POST',
+        body: formData
+      };
+
+      uploadBtn.addEventListener('click', () => {
+        // console.log(data2);
+        doRequest(data2);
+        dropFieldCounter.innerText = 'Nie wybrano obrazka';
+      }, {once: true});
+      
+
+    }, 200);
+
+  }); // ----- drop files listener --------------------------
 
 
 
@@ -154,6 +241,23 @@ function doRequest(data, thiss){
 } // ----- doRequest function -------------------
 
 
+function checkData(data){
+  // console.log(data);
+
+  const dataErrors = [];
+
+  for(let i in data){
+    // console.log(data[i]);
+    if(/(.jpg|.png|.jpeg)$/.test(data[i].name)){}
+    else {
+
+    }
+  }
+
+  return true;
+}
+
+
 function loadAccount(){
   const data = {
     url: '../php/storage.php?action=load-account',
@@ -180,6 +284,8 @@ function loadPictures(){
 
 function savePictures(files){
 
+  // console.log(files);
+  
   if(files.length > 0){
     const formData = new FormData();
 
@@ -198,7 +304,9 @@ function savePictures(files){
   }
   else {
     console.log('no pictures chosen');
-  }
+    }
+  
+
 
 } // ----- savePictures function -----------------
 
@@ -314,16 +422,13 @@ function showPictures(data){
 
     let name = '';
     let extension = '';
-    if(/(.jpg|.png|.gif)$/.test(data[i]["img_name"])){
+    if(/(.jpg|.png)$/.test(data[i]["img_name"])){
       name = data[i]["img_name"].slice(0, -4);
       if(/.jpg$/.test(data[i]["img_name"])){
         extension = '.jpg';
       }
       else if(/.png$/.test(data[i]["img_name"])){
         extension = '.png';
-      }
-      else if(/.gif$/.test(data[i]["img_name"])){
-        extension = '.gif';
       }
     }
     else if(/.jpeg$/.test(data[i]["img_name"])){
@@ -333,6 +438,7 @@ function showPictures(data){
     const newImgName = document.createElement('h5');
     newImgName.classList.add("img-name");
     newImgName.id = "img-name";
+    newImgName.setAttribute("title", name);
     newImgName.innerText = name;
     options.push(newImgName);
     

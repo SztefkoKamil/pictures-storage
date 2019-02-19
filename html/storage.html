@@ -22,11 +22,14 @@
         </h3>
         <div class="upload-field">
             <form id="upload-form" method="post" enctype="multipart/form-data">
-                <input type="file" name="images[]" multiple id="upload-input">
-                <button class="upload-button" id="upload-button" type="submit">Dodaj zdjęcie z dysku</button>
+                <input type="file" name="images[]" multiple accept="image/*" id="upload-input">
+                <button class="upload-button" id="upload-button" type="submit">Dodaj zdjęcia</button>
             </form>
             <span>lub</span>
-            <div class="drop-field" id="drop-field" draggable="true">Upuść zdjęcie tutaj!</div>
+            <div class="drop-field" id="drop-field" draggable="true">
+                <span>Upuść zdjęcie tutaj!</span>
+                <span id="drop-field-counter">Nie wybrano obrazka</span>
+            </div>
         </div>
         <button class="logout-button" id="logout-button" draggable="true">
             <span>Wyloguj się</span>

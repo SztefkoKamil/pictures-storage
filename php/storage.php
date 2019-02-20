@@ -38,7 +38,7 @@ else if(isset($_FILES['images'])){
     savePictures($_SESSION, $_FILES, $connection, "upload");
   }
 }
-else if(isset($_POST[0])){
+else if(isset($_POST)){
   if(($_SESSION["counter"] + count($_POST)) > 12){
     echo "too-many-images";
     // echo count($_FILES["images"]["tmp_name"]);
@@ -48,7 +48,7 @@ else if(isset($_POST[0])){
   }
 }
 else{
-  print_r('nothing');
+  print_r($_POST);
 }
 
 

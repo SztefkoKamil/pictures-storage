@@ -8,7 +8,6 @@ const uploadBtn = document.querySelector('#upload-button');
 const dropField = document.querySelector('#drop-field');
 const dropFieldCounter = document.querySelector('#drop-field-counter');
 const warningWindow = document.querySelector('#warning-window');
-
 const storageContainer = document.querySelector('#storage-container');
 let newName = false;
 let position = -60;
@@ -44,9 +43,9 @@ function actionListeners(){
   uploadForm.onsubmit = (e) => {
     e.preventDefault();
     if(uploadInput.files.length > 0){
-      const filteredData = Array.from(uploadInput.files).filter((a) => {return a.type==="image/jpeg" || a.type==="image.png"});
+      const filteredData = Array.from(uploadInput.files).filter((a) => {return a.type==="image/jpeg" || a.type==="image/png"});
       // console.log(filteredData);
-      savePictures(filteredData);
+      saveUploaded(filteredData);
       uploadForm.reset();
     };
   };  // ----- upload files listener -------------
@@ -63,78 +62,10 @@ function actionListeners(){
   dropField.addEventListener('drop', (e) => {
     e.stopPropagation();
     e.preventDefault();
+    saveDropped(e);
     
     // console.log(e.dataTransfer.files);
     // console.log(e);
-
-    let toggle = true;
-
-    dropFieldCounter.innerText = '';
-
-    let files = e.dataTransfer.files; // Array of all files
-
-    let x = 0;
-    let formData = new FormData();
-    
-    for (let i=0, file; file=files[i]; i++) {
-        if (file.type.match(/image\/jpeg*/) || file.type.match(/image\/png*/)) {
-            
-            let reader = new FileReader();
-            let element = {};
-            element.name = file.name;
-            element.size = file.size;
-            element.type = file.type;
-
-            reader.onload = function(event) {
-                // finished reading file data.
-
-              if(element.type == 'image/jpeg'){
-                element.path = event.target.result.slice(23);
-              }
-              else if(element.type == 'image/png'){
-                element.path = event.target.result.slice(22);
-              }
-
-              formData.append(i, JSON.stringify(element));
-              x++;
-                // console.log(formData.length);
-            }
-
-            reader.readAsDataURL(file); // start reading the file data.
-        }
-    }
-
-    setTimeout(() => {
-      // console.log(formData);
-
-      if(x > 0){
-        let message = 'Wybrano ';
-        if(x == 1){
-          message += '1 obrazek.';
-        }
-        else if(x > 1 && x < 5 ){
-          message += x + ' obrazki.';
-        }
-        else if(x > 4){
-          message += x + ' obrazków.';
-        }
-        dropFieldCounter.innerText = message;
-      }
-
-      const data2 = {
-        url: '../php/storage.php',
-        method: 'POST',
-        body: formData
-      };
-
-      uploadBtn.addEventListener('click', () => {
-        // console.log(data2);
-        doRequest(data2);
-        dropFieldCounter.innerText = 'Nie wybrano obrazka';
-      }, {once: true});
-      
-
-    }, 200);
 
   }); // ----- drop files listener --------------------------
 
@@ -192,10 +123,7 @@ function doRequest(data, thiss){
         welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.`;
       }
       else if(resp === 'logout-user-success'){
-        const expireDate = new Date();
-        document.cookie = 'PHPSESSID=logout;domain='+window.location.hostname+';path=/;expires='+expireDate.toUTCString();
-        // console.log(document.cookie);
-        window.location.replace(window.location.href.slice(0,-17));
+        logoutUser();
       }
       else if(/^delete-image-/.test(resp)){
         // console.log(resp);
@@ -227,6 +155,9 @@ function doRequest(data, thiss){
       else if(resp === 'edit-name-success'){
         editImgName('', '');
       }
+      else if(resp === 'logout-user-success'){
+        logoutUser();
+      }
       else if(resp === 'too-many-images'){
         // console.log('pictures limit 12');
         showWarning("Limit obrazków - 12!<br>Przepraszamy.");
@@ -241,23 +172,6 @@ function doRequest(data, thiss){
 } // ----- doRequest function -------------------
 
 
-function checkData(data){
-  // console.log(data);
-
-  const dataErrors = [];
-
-  for(let i in data){
-    // console.log(data[i]);
-    if(/(.jpg|.png|.jpeg)$/.test(data[i].name)){}
-    else {
-
-    }
-  }
-
-  return true;
-}
-
-
 function loadAccount(){
   const data = {
     url: '../php/storage.php?action=load-account',
@@ -268,6 +182,15 @@ function loadAccount(){
   doRequest(data);
 
 } // ----- loadAccount function --------------------
+
+
+function logoutUser(){
+  const expireDate = new Date();
+  const location = window.location;
+  document.cookie = 'PHPSESSID=logout;domain='+location.hostname+';path=/;expires='+expireDate.toUTCString();
+  // console.log(document.cookie);
+  location.replace(location.href.slice(0,-17));
+}
 
 
 function loadPictures(){
@@ -282,7 +205,85 @@ function loadPictures(){
 } /// ----- loadPictures function -----------------
 
 
-function savePictures(files){
+function saveDropped(e){
+
+  
+  let files = Array.from(e.dataTransfer.files); // Array of all files
+  // console.log(files);
+  
+  let x = 0;
+  let formData = new FormData();
+  
+  for (let i=0; i<files.length; i++) {
+    // console.log(files[i].size);
+    if (files[i].size < 5242880){
+      // console.log(files[i].size);
+      let reader = new FileReader();
+      let element = {
+        name: files[i].name,
+        size: files[i].size,
+        type: files[i].type
+      };
+      
+      reader.onload = function(event) {
+        // finished reading file data.
+        
+        if(element.type == 'image/jpeg'){
+          element.path = event.target.result.slice(23);
+        }
+        else if(element.type == 'image/png'){
+          element.path = event.target.result.slice(22);
+        }
+        
+        formData.append(x, JSON.stringify(element));
+        x++;
+        // console.log(formData.length);
+      }
+      
+      reader.readAsDataURL(files[i]); // start reading the file data.
+    }
+  }
+  
+  setTimeout(() => {
+    // console.log(formData);
+    // dropFieldCounter.innerText = '';
+    
+    if(x > 0){
+      let message = 'Wybrano ';
+      if(x == 1){
+        message += '1 obrazek.';
+      }
+      else if(x > 1 && x < 5 ){
+        message += x + ' obrazki.';
+      }
+      else if(x > 4){
+        message += x + ' obrazków.';
+      }
+      dropFieldCounter.innerText = message;
+    }
+    else {
+      dropFieldCounter.innerText = 'Nie wybrano obrazka';
+    }
+
+    const data = {
+      url: '../php/storage.php',
+      method: 'POST',
+      body: formData
+    };
+
+    uploadBtn.addEventListener('click', () => {
+      // console.log(data);
+      doRequest(data);
+      dropFieldCounter.innerText = 'Nie wybrano obrazka';
+    }, {once: true});
+    
+
+  }, 100);
+
+} // -----saveDropped function --------------------
+
+
+function saveUploaded(files){
 
   // console.log(files);
   
@@ -290,8 +291,10 @@ function savePictures(files){
     const formData = new FormData();
 
     for(let i=0; i<files.length; i++){
-      let file = files[i];
-      formData.append('images[]', file);
+      // console.log(files[i].size + " - " + files[i].name);
+      if(files[i].size < 5242880){
+        formData.append('images[]', files[i]);
+      }
     }
 
     const data = {
@@ -396,7 +399,6 @@ function showPictures(data){
 
     const newDloadBtn = document.createElement('a');
     newDloadBtn.classList.add("download-img-button");
-    // newDloadBtn.id = "download-img-button";
     newDloadBtn.setAttribute("href", "data:image;base64,"+data[i]["img"]);
     newDloadBtn.setAttribute("download", data[i]["img_name"]);
     newDloadBtn.setAttribute("title", "Pobierz obrazek");

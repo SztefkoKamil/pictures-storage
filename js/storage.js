@@ -120,7 +120,7 @@ function doRequest(data, thiss){
       if(/^loaded/.test(resp) && resp.length > 10){
         const user = resp.slice(6);
         loadPictures();
-        welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.`;
+        welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.<br>Limit zdjęć - 12, maksymalny rozmiar 5MB.`;
       }
       else if(resp === 'logout-user-success'){
         logoutUser();
@@ -318,9 +318,13 @@ function editImgName(id, extension){
   if(!newName){
     const element = document.querySelector(`[data-id="${id}"] .img-name`);
     newName = {};
-    newName.name = prompt('Wpisz nową nazwę', element.innerText);
     newName.id = id;
     newName.extension = extension;
+    newName.name = prompt('Wpisz nową nazwę', element.innerText);
+
+    if(!newName.name){
+      newName.name = element.innerText;
+    }
 
     const formData = new FormData();
     formData.append('id', id);

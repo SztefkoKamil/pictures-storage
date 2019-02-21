@@ -18,17 +18,19 @@
             <i class="fas fa-user-times"></i>
             <span>Skasuj konto</span>
         </button>
-        <h3 id="welcome-message">Witaj guest!<br> Dodaj zdjęcie do swojej kolekcji.
+        <h3 id="welcome-message">Witaj Guest!<br> Dodaj zdjęcie do swojej kolekcji.<br>Limit zdjęć - 12, maksymalny rozmiar 5MB.
         </h3>
         <div class="upload-field">
-            <form id="upload-form" method="post" enctype="multipart/form-data">
-                <input type="file" name="images[]" multiple accept="image/*" id="upload-input">
+            <form class="upload-form" id="upload-form" method="post" enctype="multipart/form-data">
+                <input type="file" name="images[]" multiple accept="image/*" class="upload-input" id="upload-input">
                 <button class="upload-button" id="upload-button" type="submit">Dodaj zdjęcia</button>
             </form>
-            <span>lub</span>
-            <div class="drop-field" id="drop-field" draggable="true">
-                <span>Upuść zdjęcie tutaj!</span>
-                <span id="drop-field-counter">Nie wybrano obrazka</span>
+            <div class="drop-container">
+                <div class="drop-field" id="drop-field" draggable="true">
+                    <span>Upuść zdjęcie tutaj!</span>
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <span class="drop-field-counter" id="drop-field-counter">Nie wybrano obrazka</span>
             </div>
         </div>
         <button class="logout-button" id="logout-button" draggable="true">

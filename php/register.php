@@ -152,6 +152,7 @@ function  createSession($data){
   $_SESSION["user"] = $data["email"];
   $_SESSION["name"] = $data["name"];
   $_SESSION["start-time"] = time();
+  $_SESSION["counter"] = 0;
   echo "redirect";
 } // ----- createSession function ---------------------------
 

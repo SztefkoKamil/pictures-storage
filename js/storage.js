@@ -18,22 +18,12 @@ let touchScreen = false;
 let ww = window.innerWidth;
 
 
-function actionListeners(ts){
-  touchScreen = ts;
-  // console.log(touchScreen);
-  // console.log(window);
-
-  window.addEventListener('resize', () => {
-    ww = window.innerWidth;
-    console.log(ww);
-    // console.log(getEventListeners(document));
-  });
-
+function actionListeners(){
 
   logoutBtn.onclick = () => {
     console.log('logout');
     const data = {
-      url: '../php/storage.php?action=logout-user',
+      url: 'php/storage.php?action=logout-user',
       method: 'GET',
       body: 'none'
     }
@@ -41,13 +31,13 @@ function actionListeners(ts){
     doRequest(data);
   };
   
+
   deleteUserBtn.onclick = () => {
-    // console.log('delete user');
     let confirmDelete = confirm('Czy napewno chcesz usunąć konto?');
 
     if(confirmDelete){
       const data = {
-        url: '../php/storage.php?action=delete-user',
+        url: 'php/storage.php?action=delete-user',
         method: 'GET',
         body: 'none'
       }
@@ -55,6 +45,7 @@ function actionListeners(ts){
       doRequest(data);
     }
   };
+
 
   uploadForm.onsubmit = (e) => {
     e.preventDefault();
@@ -71,36 +62,30 @@ function actionListeners(ts){
     e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
-    // console.log('e');
-    // console.log(e.dataTransfer);
-    // console.log(e);
   });
   dropField.addEventListener('drop', (e) => {
     e.stopPropagation();
     e.preventDefault();
     saveDropped(e);
-    
-    // console.log(e.dataTransfer.files);
-    // console.log(e);
-
   }); // ----- drop files listener --------------------------
 
-  let g = true;
+
+  let flag = true;
   miniBtn.onclick = () => {
     console.log('tt');
-    if(g){
+    if(flag){
       actionBar.classList.add('menu-down');
       miniBtn.firstElementChild.classList.add('menu-open');
       actionBar.classList.remove('menu-up');
       miniBtn.firstElementChild.classList.remove('menu-close');
-      g = !g;
+      flag = !flag;
     }
     else{
       actionBar.classList.add('menu-up');
       miniBtn.firstElementChild.classList.add('menu-close');
       actionBar.classList.remove('menu-down');
       miniBtn.firstElementChild.classList.remove('menu-open');
-      g = !g;
+      flag = !flag;
     }
   };
 
@@ -117,7 +102,7 @@ function doRequest(data, thiss){
     }).then((resp) => { 
       // console.log(resp);
 
-      if(/^loaded/.test(resp) && resp.length > 10){
+      if(/^loaded/.test(resp) && resp.length > 7){
         const user = resp.slice(6);
         loadPictures();
         welcomeMsg.innerHTML = `Witaj ${user}!`;
@@ -174,7 +159,7 @@ function doRequest(data, thiss){
 
 function loadAccount(){
   const data = {
-    url: '../php/storage.php?action=load-account',
+    url: 'php/storage.php?action=load-account',
     method: 'GET',
     body: 'none'
   };
@@ -189,13 +174,13 @@ function logoutUser(){
   const location = window.location;
   document.cookie = 'PHPSESSID=logout;domain='+location.hostname+';path=/;expires='+expireDate.toUTCString();
   // console.log(document.cookie);
-  location.replace(location.href.slice(0,-17));
+  location.replace(location.href.slice(0,-12));
 }
 
 
 function loadPictures(){
   const data = {
-    url: '../php/storage.php?action=load-pictures',
+    url: 'php/storage.php?action=load-pictures',
     method: 'GET',
     body: 'none'
   };
@@ -266,7 +251,7 @@ function saveDropped(e){
     }
 
     const data = {
-      url: '../php/storage.php',
+      url: 'php/storage.php',
       method: 'POST',
       body: formData
     };
@@ -298,7 +283,7 @@ function saveUploaded(files){
     }
 
     const data = {
-      url: '../php/storage.php',
+      url: 'php/storage.php',
       method: 'POST',
       body: formData
     };
@@ -330,7 +315,7 @@ function editImgName(id, extension){
     formData.append('id', id);
     formData.append('new-name', newName.name + extension);
     const data = {
-      url: `../php/storage.php`,
+      url: `php/storage.php`,
       method: 'POST',
       body: formData
     };
@@ -492,7 +477,7 @@ function optionsListeners(){
 
       if(confirm("Usunąć zdjęcie?")){
         const data = {
-          url: '../php/storage.php?action=delete-image&imageID=' + id,
+          url: 'php/storage.php?action=delete-image&imageID=' + id,
           method: 'GET',
           body: 'none'
         }; 

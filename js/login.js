@@ -124,7 +124,7 @@ function sendRequest(url){
     return response.text();
   }).then(response => {
     if(response === 'login-success'){
-      window.location.replace(window.location.href + 'html/storage.html');
+      window.location.replace(window.location.href + 'storage.html');
     }
     else if(response === 'login-error'){
       showWarning("Błędny email lub hasło!");

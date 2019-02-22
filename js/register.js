@@ -70,7 +70,7 @@ const recaptcha = function(token){
     body: formData
   };
 
-  fetch('../php/register.php', data).then(response => {
+  fetch('php/register.php', data).then(response => {
     return response.text();
   }).then(response => {
     // console.log(response);
@@ -156,7 +156,7 @@ function doRequest(data){
   formData.append("email", data.email);
   formData.append("password", data.pass);
 
-  fetch('../php/register.php', {
+  fetch('php/register.php', {
     method: "POST",
     body: formData
   }).then(response => {

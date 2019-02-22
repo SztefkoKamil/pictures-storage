@@ -19,3 +19,10 @@ body{
   flex-direction: column;
   align-items: center;
 }
+
+@media screen and (max-width: 960px){
+  .container{
+    width: 100vw;
+    margin-top: 0;
+  }
+}

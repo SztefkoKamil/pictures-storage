@@ -149,7 +149,7 @@ function  createSession($data){
   // session_set_cookie_params(600);
   session_start();
   $_SESSION["id"] = $data["id"];
-  $_SESSION["email"] = $data["email"];
+  $_SESSION["user"] = $data["email"];
   $_SESSION["name"] = $data["name"];
   $_SESSION["start-time"] = time();
   echo "redirect";

@@ -18,7 +18,9 @@
             <i class="fas fa-user-times"></i>
             <span>Skasuj konto</span>
         </button>
-        <h3 id="welcome-message">Witaj Guest!<br> Dodaj zdjęcie do swojej kolekcji.<br>Limit zdjęć - 12, maksymalny rozmiar 5MB.
+        <h3>
+            <span id="welcome-message">Witaj Guest!</span>
+            <span>Dodaj zdjęcie do swojej kolekcji.</span>
         </h3>
         <div class="upload-field">
             <form class="upload-form" id="upload-form" method="post" enctype="multipart/form-data">
@@ -37,8 +39,14 @@
             <span>Wyloguj się</span>
             <i class="fas fa-sign-out-alt"></i>
         </button>
-      </div>
-      <div class="storage-container" id="storage-container">
+        <div class="mini-menu" id="mini-menu">
+            <span>MENU</span>
+            <button class="mini-button" id="mini-button">
+                <i class="far fa-arrow-alt-circle-down"></i>
+            </button>
+        </div>
+        </div>
+        <div class="storage-container" id="storage-container">
           <!-- <div class="img-container data-id="1"">
               <img src="" alt="" class="image">
               <div class="layout">
@@ -48,8 +56,14 @@
                   <button class="edit-img-button" id="edit-img-button">E</button>
               </div>
           </div> -->
-      </div>
-      <div class="warning-window" id="warning-window"></div>
+        </div>
+        <div class="warning-window" id="warning-window"></div>
+        <div class="storage-modal" id="storage-modal">
+            <button class="modal-button left" id="modal-left-button">&#60;</button>
+            <img class="storage-modal-img" id="storage-modal-img" src="" alt="current picture">
+            <button class="modal-button right" id="modal-right-button">&#62;</button>
+            <button class="modal-close-button" id="modal-close-button">X</button>
+        </div>
     </div>
 </body>
 </html>

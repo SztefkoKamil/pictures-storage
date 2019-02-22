@@ -35,7 +35,10 @@ function actionListener(){
     }
   }
 
-  rulesBtn.onclick = () => {
+  rulesBtn.onclick = (e) => {
+    if(registerBtn.getAttribute('disabled') === "disabled"){
+      e.preventDefault();
+    }
     registerModal.style.display="flex";
   }
 

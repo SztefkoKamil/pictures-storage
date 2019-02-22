@@ -1,4 +1,5 @@
 
+const actionBar = document.querySelector('#action-bar');
 const welcomeMsg = document.querySelector('#welcome-message');
 const logoutBtn = document.querySelector('#logout-button');
 const deleteUserBtn = document.querySelector('#delete-user-button');
@@ -7,13 +8,28 @@ const uploadInput = document.querySelector('#upload-input');
 const uploadBtn = document.querySelector('#upload-button');
 const dropField = document.querySelector('#drop-field');
 const dropFieldCounter = document.querySelector('#drop-field-counter');
+const miniBtn = document.querySelector('#mini-button');
 const warningWindow = document.querySelector('#warning-window');
 const storageContainer = document.querySelector('#storage-container');
 let newName = false;
 let position = -60;
+let gallery = [];
+let touchScreen = false;
+let ww = window.innerWidth;
 
 
-function actionListeners(){
+function actionListeners(ts){
+  touchScreen = ts;
+  // console.log(touchScreen);
+  // console.log(window);
+
+  window.addEventListener('resize', () => {
+    ww = window.innerWidth;
+    console.log(ww);
+    // console.log(getEventListeners(document));
+  });
+
+
   logoutBtn.onclick = () => {
     console.log('logout');
     const data = {
@@ -69,48 +85,32 @@ function actionListeners(){
 
   }); // ----- drop files listener --------------------------
 
+  let g = true;
+  miniBtn.onclick = () => {
+    console.log('tt');
+    if(g){
+      actionBar.classList.add('menu-down');
+      miniBtn.firstElementChild.classList.add('menu-open');
+      actionBar.classList.remove('menu-up');
+      miniBtn.firstElementChild.classList.remove('menu-close');
+      g = !g;
+    }
+    else{
+      actionBar.classList.add('menu-up');
+      miniBtn.firstElementChild.classList.add('menu-close');
+      actionBar.classList.remove('menu-down');
+      miniBtn.firstElementChild.classList.remove('menu-open');
+      g = !g;
+    }
+  };
 
 
 } // ----- actionListeners function ---------------------
 
 
-function optionsListeners(){
-  // const imgDloadBtns = document.querySelectorAll('.download-img-button');
-  const imgDeleteBtns = document.querySelectorAll('.delete-img-button');
-  const imgEditBtns = document.querySelectorAll('.edit-img-button');
-
-  
-  imgDeleteBtns.forEach((btn) => {
-    const id = btn.parentNode.parentNode.getAttribute("data-id");
-    btn.addEventListener('click', function(){
-      // console.log('delete image id: '+id);
-
-      if(confirm("Usunąć zdjęcie?")){
-        const data = {
-          url: '../php/storage.php?action=delete-image&imageID=' + id,
-          method: 'GET',
-          body: 'none'
-        }; 
-  
-        doRequest(data, this);
-      }
-    });
-  });
-
-  imgEditBtns.forEach((btn) => {
-    const id = btn.parentNode.parentNode.getAttribute("data-id");
-    const extension = btn.getAttribute("data-ext");
-    btn.addEventListener('click', function(){
-      editImgName(id, extension);
-    });
-  });
-
-
-} // ----- optionsListeners function ----------------
-
 
 function doRequest(data, thiss){
-
+  
   if(data.body === "none"){
     fetch(data.url, {method: data.method}).then(response => {
       return response.text();
@@ -120,7 +120,7 @@ function doRequest(data, thiss){
       if(/^loaded/.test(resp) && resp.length > 10){
         const user = resp.slice(6);
         loadPictures();
-        welcomeMsg.innerHTML = `Witaj ${user}!<br> Dodaj zdjęcie do swojej kolekcji.<br>Limit zdjęć - 12, maksymalny rozmiar 5MB.`;
+        welcomeMsg.innerHTML = `Witaj ${user}!`;
       }
       else if(resp === 'logout-user-success'){
         logoutUser();
@@ -395,6 +395,7 @@ function showPictures(data){
     newImg.classList.add('image');
     newImg.setAttribute("src", "data:image;base64,"+data[i]["img"]);
     // console.log(newImg.width);
+    gallery.push(data[i]["img"]);
 
     const newLayout = document.createElement('div');
     newLayout.classList.add("layout");
@@ -475,6 +476,137 @@ function showPictures(data){
   optionsListeners();
 
 } // ----- showPictures function -------------------
+
+
+function optionsListeners(){
+  // const imgDloadBtns = document.querySelectorAll('.download-img-button');
+  const imgDeleteBtns = document.querySelectorAll('.delete-img-button');
+  const imgEditBtns = document.querySelectorAll('.edit-img-button');
+  const layouts = document.querySelectorAll('.layout');
+
+  
+  imgDeleteBtns.forEach((btn) => {
+    const id = btn.parentNode.parentNode.getAttribute("data-id");
+    btn.addEventListener('click', function(){
+      // console.log('delete image id: '+id);
+
+      if(confirm("Usunąć zdjęcie?")){
+        const data = {
+          url: '../php/storage.php?action=delete-image&imageID=' + id,
+          method: 'GET',
+          body: 'none'
+        }; 
+  
+        doRequest(data, this);
+      }
+    });
+  });
+
+  imgEditBtns.forEach((btn) => {
+    const id = btn.parentNode.parentNode.getAttribute("data-id");
+    const extension = btn.getAttribute("data-ext");
+    btn.addEventListener('click', function(){
+      editImgName(id, extension);
+    });
+  });
+
+  layouts.forEach((layout) => {
+    // console.log(layout.parentNode.firstElementChild.getAttribute("src"));
+    layout.onclick = (e) => {
+      // console.log(e.target.classList.value);
+      if(e.target.classList.value === 'layout'){
+        showGallery(e.target);
+      }
+    };
+
+  });
+
+
+} // ----- optionsListeners function ----------------
+
+function showGallery(target){
+  const storageModal = document.querySelector('#storage-modal');
+  const storageModalImg = document.querySelector('#storage-modal-img');
+  const modalLeftBtn = document.querySelector('#modal-left-button');
+  const modalRightBtn = document.querySelector('#modal-right-button');
+  const modalCloseBtn = document.querySelector('#modal-close-button');
+  const src = target.parentNode.firstElementChild.getAttribute("src");
+  let currentIndex = null;
+  const length = gallery.length;
+
+  for(let i in gallery){
+    if(src === "data:image;base64," + gallery[i]){
+      currentIndex = i;
+    }
+  }
+
+  storageModalImg.setAttribute("src", "data:image;base64," + gallery[currentIndex]);
+  storageModal.style.display = "flex";
+  storageContainer.style.display = "none";
+
+  let move = {};
+
+  if(touchScreen){
+    storageModalImg.ontouchstart = (e) => {
+      move.sx = e.targetTouches[0].clientX;
+    }
+    storageModalImg.ontouchend = (e) => {
+      move.ex = e.changedTouches[0].clientX;
+
+      if(move.sx > move.ex+100){
+        galleryRight();
+      }
+      else if(move.sx < move.ex-100){
+        galleryLeft();
+      }
+    }
+
+  }
+
+  modalLeftBtn.onclick = () => {
+    galleryLeft();
+  };
+  modalRightBtn.onclick = () => {
+    galleryRight();
+  };
+  modalCloseBtn.onclick = () => {
+    modalClose();
+  };
+
+  window,onkeydown = (e) => {
+    if(e.key === 'ArrowLeft'){
+      galleryLeft();
+    }
+    else if(e.key === 'ArrowRight'){
+      galleryRight();
+    }
+    else if(e.key === 'Escape'){
+      modalClose();
+    }
+  }
+
+  function galleryLeft(){
+    currentIndex--;
+    if(currentIndex === -1){
+      currentIndex = length-1;
+    }
+    storageModalImg.setAttribute("src", "data:image;base64," + gallery[currentIndex]);
+  }
+
+  function galleryRight(){
+    currentIndex++;
+    if(currentIndex === length){
+      currentIndex = 0;
+    }
+    storageModalImg.setAttribute("src", "data:image;base64," + gallery[currentIndex]);
+  }
+
+  function modalClose(){
+    storageContainer.style.display = "flex";
+    storageModal.style.display="none";
+  }
+
+};  // ----- showGallery function ----------------
 
 
 

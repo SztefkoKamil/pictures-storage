@@ -275,6 +275,10 @@
   height: 160px;
   top: 0;
 }
+.layout.hover{
+  height: 160px;
+  top: 0;
+}
 
 .download-img-button{
   width: 30px;

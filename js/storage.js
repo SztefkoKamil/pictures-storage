@@ -14,11 +14,10 @@ const storageContainer = document.querySelector('#storage-container');
 let newName = false;
 let position = -60;
 let gallery = [];
-let touchScreen = false;
-let ww = window.innerWidth;
 
 
 function actionListeners(){
+
 
   logoutBtn.onclick = () => {
     console.log('logout');
@@ -155,6 +154,15 @@ function doRequest(data, thiss){
   }
 
 } // ----- doRequest function -------------------
+
+let isTouchDevice = function() {  
+  try {  
+    document.createEvent("TouchEvent");  
+    return true;  
+  } catch (e) {  
+    return false;  
+  }  
+}
 
 
 function loadAccount(){
@@ -495,15 +503,22 @@ function optionsListeners(){
     });
   });
 
+
+  let isTouch = isTouchDevice();
+
   layouts.forEach((layout) => {
-    // console.log(layout.parentNode.firstElementChild.getAttribute("src"));
+    
     layout.onclick = (e) => {
-      // console.log(e.target.classList.value);
-      if(e.target.classList.value === 'layout'){
+      console.log(e.target.classList.value);
+      if(e.target.classList.value == 'layout hover' || e.target.classList.value == 'layout'){
         showGallery(e.target);
       }
     };
 
+    if(isTouch){
+      layout.classList.add('hover');
+    }
+    
   });
 
 
@@ -531,7 +546,7 @@ function showGallery(target){
 
   let move = {};
 
-  if(touchScreen){
+  if(isTouchDevice()){
     storageModalImg.ontouchstart = (e) => {
       move.sx = e.targetTouches[0].clientX;
     }

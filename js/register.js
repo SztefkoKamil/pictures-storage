@@ -1,4 +1,3 @@
-
 const registerForm = document.querySelector('#register-form');
 const nameIn = document.querySelector('#name');
 const emailIn = document.querySelector('#email');
@@ -11,7 +10,6 @@ const rulesLabel = document.querySelector('#rules-label');
 const registerModal = document.querySelector('#register-modal');
 const registerModalBtn = document.querySelector('#register-modal-button');
 const warningWindow = document.querySelector('#warning-window');
-
 let formErrors = [];
 let position = -60;
 
@@ -19,7 +17,6 @@ let position = -60;
 function actionListener(){
   registerForm.onsubmit = (e) => {
     e.preventDefault();
-    // console.log('register');
 
     if(registerBtn.getAttribute('disabled') == null){
       const data = getData();
@@ -29,7 +26,6 @@ function actionListener(){
         doRequest(data);
       }
       else {
-        // console.log('form data error');
         showWarning(checked);
       }
     }
@@ -55,13 +51,12 @@ function actionListener(){
 
 } // ----- actionListener function --------------
 
+
 const expired = function(){
   registerBtn.setAttribute('disabled', 'disabled');
-}
+}  // ----- expired recaptcha function -------------
 
 const recaptcha = function(token){
-  // console.log(token);
-
   const formData = new FormData();
   formData.append('g-recaptcha-response', token);
 
@@ -73,13 +68,13 @@ const recaptcha = function(token){
   fetch('php/register.php', data).then(response => {
     return response.text();
   }).then(response => {
-    // console.log(response);
 
     if(response === '1'){
       registerBtn.removeAttribute('disabled');
     }
     else { console.log('captcha verify error'); }
   });
+
 } // ----- recaptcha function -------------
 
 
@@ -100,42 +95,37 @@ function checkData(data){
   passIn.classList.remove("error-input");
   pass2In.classList.remove("error-input");
   rulesLabel.style.color = "#000";
-
   const emailPattern = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
   let ok = true;
+
 
   if(!emailPattern.test(data.email)){
     ok = false;
     emailIn.classList.add("error-input");
-    // console.log('wrong email');
     formErrors.push("Podaj poprawny email");
   }
 
   if(data.name.length < 2){
     ok = false;
     nameIn.classList.add("error-input");
-    // console.log('name to short - min 2 characters');
     formErrors.push("Imię musi mieć co najmniej 2 znaki");
   }
 
   if(data.pass.length < 6 || data.pass.length > 24){
     ok = false;
     passIn.classList.add("error-input");
-    // console.log('password must have min 6 max 24 characters');
     formErrors.push("Hasło musi mieć od 2 do 24 znaków");
   }
 
   if(data.pass != data.pass2 || data.pass2.length < 6){
     ok = false;
     pass2In.classList.add("error-input");
-    // console.log('repeat password');
     formErrors.push("Powtórz hasło");
   }
 
   if(!data.rules){
     ok = false;
     rulesLabel.style.color = "red";
-    // console.log('accept terms');
     formErrors.push("Zaakceptuj regulamin");
   }
 
@@ -148,9 +138,8 @@ function checkData(data){
 
 } // -----checkData function --------------
 
-function doRequest(data){
-  // console.log(data);
 
+function doRequest(data){
   const formData = new FormData();
   formData.append("name", data.name);
   formData.append("email", data.email);
@@ -162,24 +151,23 @@ function doRequest(data){
   }).then(response => {
     return response.text();
   }).then(response => {
-    // console.log(response);
+    
     if(response === 'redirect'){
       let href = window.location.href.slice(0,-13);
       href += 'storage.html';
       window.location.replace(href);
     }
     else if(response === 'user-exist'){
-      // console.log('this user exist');
       showWarning("Użytkownik o takim adresie email już istnieje!");
     }
     else if(response === 'too-many-users'){
-      // console.log('users limit 10');
       showWarning("Osiągnięto limit 10 użytkowników!");
     }
     else{
-      console.log(response);
+      // console.log(response);
     }
-  });;
+  });
+
 } // ----- doRequest function -------------
 
 
@@ -200,7 +188,6 @@ function showWarning(data){
   else {
     message = data;
   }
-  // console.log(message);
 
   warningWindow.innerText = message;
   requestAnimationFrame(slideDown);
@@ -219,7 +206,7 @@ function slideDown(){
       requestAnimationFrame(slideDown);
     }
   }
-}
+} // ----- slideDown function ---------------
 
 function slideUp(){
   if(position > -60){
@@ -230,7 +217,7 @@ function slideUp(){
       requestAnimationFrame(slideUp);
     }
   }
-}
+} // ----- slideUp function ---------------
 
 
 export {actionListener};

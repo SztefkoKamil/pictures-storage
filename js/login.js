@@ -2,8 +2,6 @@ const loginForm = document.querySelector('#login-form');
 const loginEmail = document.querySelector('#login-email');
 const loginPassword = document.querySelector('#login-password');
 const warningWindow = document.querySelector('#warning-window');
-
-let formErrors = [];
 let position = -60;
 
 
@@ -87,14 +85,13 @@ function showWarning(data){
   else {
     message = data;
   }
-  // console.log(message);
 
   warningWindow.innerText = message;
   requestAnimationFrame(slideDown);
   setTimeout(() => {
     requestAnimationFrame(slideUp);
   }, 10000);
-}
+} // ----- showWarning function -------------
 
 function slideDown(){
   if(position < 0){
@@ -105,7 +102,7 @@ function slideDown(){
       requestAnimationFrame(slideDown);
     }
   }
-}
+} // ----- slideDown function ---------------
 
 function slideUp(){
   if(position > -60){
@@ -116,7 +113,7 @@ function slideUp(){
       requestAnimationFrame(slideUp);
     }
   }
-}
+} // ----- slideUp function ---------------
 
 function sendRequest(url){
 

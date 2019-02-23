@@ -1,4 +1,3 @@
-
 const actionBar = document.querySelector('#action-bar');
 const welcomeMsg = document.querySelector('#welcome-message');
 const logoutBtn = document.querySelector('#logout-button');
@@ -18,7 +17,6 @@ let gallery = [];
 
 function actionListeners(){
 
-
   logoutBtn.onclick = () => {
     console.log('logout');
     const data = {
@@ -28,8 +26,7 @@ function actionListeners(){
     }
 
     doRequest(data);
-  };
-  
+  };  // ----- logout button listener -------------
 
   deleteUserBtn.onclick = () => {
     let confirmDelete = confirm('Czy napewno chcesz usunąć konto?');
@@ -43,19 +40,17 @@ function actionListeners(){
   
       doRequest(data);
     }
-  };
+  };  // ----- delete user button listener -------------
 
 
   uploadForm.onsubmit = (e) => {
     e.preventDefault();
     if(uploadInput.files.length > 0){
       const filteredData = Array.from(uploadInput.files).filter((a) => {return a.type==="image/jpeg" || a.type==="image/png"});
-      // console.log(filteredData);
       saveUploaded(filteredData);
       uploadForm.reset();
     };
   };  // ----- upload files listener -------------
-
 
   dropField.addEventListener('dragover', (e) => {
     e.stopPropagation();
@@ -66,27 +61,27 @@ function actionListeners(){
     e.stopPropagation();
     e.preventDefault();
     saveDropped(e);
-  }); // ----- drop files listener --------------------------
+  }); // ----- drop files listeners --------------------------
 
 
-  let flag = true;
+  let open = false;
   miniBtn.onclick = () => {
-    console.log('tt');
-    if(flag){
+    
+    if(!open){
       actionBar.classList.add('menu-down');
       miniBtn.firstElementChild.classList.add('menu-open');
       actionBar.classList.remove('menu-up');
       miniBtn.firstElementChild.classList.remove('menu-close');
-      flag = !flag;
+      open = !open;
     }
     else{
       actionBar.classList.add('menu-up');
       miniBtn.firstElementChild.classList.add('menu-close');
       actionBar.classList.remove('menu-down');
       miniBtn.firstElementChild.classList.remove('menu-open');
-      flag = !flag;
+      open = !open;
     }
-  };
+  };  // ----- mini menu button listener -----------------------
 
 
 } // ----- actionListeners function ---------------------
@@ -99,7 +94,6 @@ function doRequest(data, thiss){
     fetch(data.url, {method: data.method}).then(response => {
       return response.text();
     }).then((resp) => { 
-      // console.log(resp);
 
       if(/^loaded/.test(resp) && resp.length > 7){
         const user = resp.slice(6);
@@ -120,19 +114,19 @@ function doRequest(data, thiss){
           showPictures(JSON.parse(response));
         }
         else {
-          console.log(response);
+          // console.log(response);
         }
       }
       else{
-        console.log(resp);
+        // console.log(resp);
       }
 
-     });
+    });
   } else {
     fetch(data.url, {method: data.method, body: data.body}).then(response => {
       return response.text();
     }).then((resp) => {
-      // console.log(resp);
+      
       if(resp === 'readyToLoad'){
         loadPictures();
       }
@@ -143,11 +137,10 @@ function doRequest(data, thiss){
         logoutUser();
       }
       else if(resp === 'too-many-images'){
-        // console.log('pictures limit 12');
         showWarning("Limit obrazków - 12!<br>Przepraszamy.");
       }
       else {
-        console.log(resp);
+        // console.log(resp);
       }
     });
 
@@ -162,7 +155,7 @@ let isTouchDevice = function() {
   } catch (e) {  
     return false;  
   }  
-}
+} // ----- isTouchDevice function -------------
 
 
 function loadAccount(){
@@ -176,16 +169,6 @@ function loadAccount(){
 
 } // ----- loadAccount function --------------------
 
-
-function logoutUser(){
-  const expireDate = new Date();
-  const location = window.location;
-  document.cookie = 'PHPSESSID=logout;domain='+location.hostname+';path=/;expires='+expireDate.toUTCString();
-  // console.log(document.cookie);
-  location.replace(location.href.slice(0,-12));
-}
-
-
 function loadPictures(){
   const data = {
     url: 'php/storage.php?action=load-pictures',
@@ -197,20 +180,21 @@ function loadPictures(){
 
 } /// ----- loadPictures function -----------------
 
+function logoutUser(){
+  const expireDate = new Date();
+  const location = window.location;
+  document.cookie = 'PHPSESSID=logout;domain='+location.hostname+';path=/;expires='+expireDate.toUTCString();
+  location.replace(location.href.slice(0,-12));
+} // ----- logoutUser function -------------
+
 
 function saveDropped(e){
-
-  
-  let files = Array.from(e.dataTransfer.files); // Array of all files
-  // console.log(files);
-  
+  let files = Array.from(e.dataTransfer.files);
   let x = 0;
   let formData = new FormData();
   
   for (let i=0; i<files.length; i++) {
-    // console.log(files[i].size);
     if (files[i].size < 5242880){
-      // console.log(files[i].size);
       let reader = new FileReader();
       let element = {
         name: files[i].name,
@@ -219,8 +203,6 @@ function saveDropped(e){
       };
       
       reader.onload = function(event) {
-        // finished reading file data.
-        
         if(element.type == 'image/jpeg'){
           element.path = event.target.result.slice(23);
         }
@@ -230,17 +212,13 @@ function saveDropped(e){
         
         formData.append(x, JSON.stringify(element));
         x++;
-        // console.log(formData.length);
       }
       
-      reader.readAsDataURL(files[i]); // start reading the file data.
+      reader.readAsDataURL(files[i]);
     }
   }
   
   setTimeout(() => {
-    // console.log(formData);
-    // dropFieldCounter.innerText = '';
-    
     if(x > 0){
       let message = 'Wybrano ';
       if(x == 1){
@@ -265,26 +243,18 @@ function saveDropped(e){
     };
 
     uploadBtn.addEventListener('click', () => {
-      // console.log(data);
       doRequest(data);
       dropFieldCounter.innerText = 'Nie wybrano obrazka';
     }, {once: true});
-    
-
   }, 100);
 
 } // -----saveDropped function --------------------
 
-
 function saveUploaded(files){
-
-  // console.log(files);
-  
   if(files.length > 0){
     const formData = new FormData();
 
     for(let i=0; i<files.length; i++){
-      // console.log(files[i].size + " - " + files[i].name);
       if(files[i].size < 5242880){
         formData.append('images[]', files[i]);
       }
@@ -300,10 +270,8 @@ function saveUploaded(files){
   }
   else {
     console.log('no pictures chosen');
-    }
+  }
   
-
-
 } // ----- savePictures function -----------------
 
 
@@ -331,18 +299,16 @@ function editImgName(id, extension){
     doRequest(data);
   }
   else {
-    // console.log(newName);
     const element = document.querySelector(`[data-id="${newName.id}"] .img-name`);
     element.innerText = newName.name;
     newName = false;
   }
 } // ----- editImgName function -------------------
 
-
 function deleteImage(thiss){
   const imgcontainer = thiss.parentNode.parentNode;
   let x = storageContainer.removeChild(imgcontainer);
-};
+}; // ----- deleteImage function -------------
 
 
 function showWarning(data){
@@ -351,7 +317,7 @@ function showWarning(data){
   setTimeout(() => {
     requestAnimationFrame(slideUp);
   }, 10000);
-}
+} // ----- showWarning function -------------
 
 function slideDown(){
   if(position < 0){
@@ -362,7 +328,7 @@ function slideDown(){
       requestAnimationFrame(slideDown);
     }
   }
-}
+} // ----- slideDown function ---------------
 
 function slideUp(){
   if(position > -60){
@@ -373,7 +339,7 @@ function slideUp(){
       requestAnimationFrame(slideUp);
     }
   }
-}
+} // ----- slideUp function ---------------
 
 
 function showPictures(data){
@@ -387,7 +353,7 @@ function showPictures(data){
     const newImg = document.createElement('img');
     newImg.classList.add('image');
     newImg.setAttribute("src", "data:image;base64,"+data[i]["img"]);
-    // console.log(newImg.width);
+
     gallery.push(data[i]["img"]);
 
     const newLayout = document.createElement('div');
@@ -472,7 +438,6 @@ function showPictures(data){
 
 
 function optionsListeners(){
-  // const imgDloadBtns = document.querySelectorAll('.download-img-button');
   const imgDeleteBtns = document.querySelectorAll('.delete-img-button');
   const imgEditBtns = document.querySelectorAll('.edit-img-button');
   const layouts = document.querySelectorAll('.layout');
@@ -481,7 +446,6 @@ function optionsListeners(){
   imgDeleteBtns.forEach((btn) => {
     const id = btn.parentNode.parentNode.getAttribute("data-id");
     btn.addEventListener('click', function(){
-      // console.log('delete image id: '+id);
 
       if(confirm("Usunąć zdjęcie?")){
         const data = {
@@ -507,9 +471,8 @@ function optionsListeners(){
   let isTouch = isTouchDevice();
 
   layouts.forEach((layout) => {
-    
+
     layout.onclick = (e) => {
-      console.log(e.target.classList.value);
       if(e.target.classList.value == 'layout hover' || e.target.classList.value == 'layout'){
         showGallery(e.target);
       }
@@ -523,6 +486,7 @@ function optionsListeners(){
 
 
 } // ----- optionsListeners function ----------------
+
 
 function showGallery(target){
   const storageModal = document.querySelector('#storage-modal');
@@ -607,7 +571,6 @@ function showGallery(target){
   }
 
 };  // ----- showGallery function ----------------
-
 
 
 export {loadAccount, actionListeners};

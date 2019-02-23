@@ -1,6 +1,4 @@
 <?php
-
-// session_set_cookie_params(600);
 session_start();
 
 checkSession();
@@ -26,13 +24,11 @@ else if(isset($_GET['action']) && $_GET['action']==='delete-image' && isset($_GE
   deleteImage($_GET['imageID'], $connection);
 }
 else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
-  // echo 'delete-user-success';
   deleteUser($_SESSION["id"], $connection);
 }
 else if(isset($_FILES['images'])){
   if(($_SESSION["counter"] + count($_FILES["images"]["tmp_name"])) > 12){
     echo "too-many-images";
-    // echo count($_FILES["images"]["tmp_name"]);
   }
   else {
     savePictures($_SESSION, $_FILES, $connection, "upload");
@@ -41,7 +37,6 @@ else if(isset($_FILES['images'])){
 else if(isset($_POST)){
   if(($_SESSION["counter"] + count($_POST)) > 12){
     echo "too-many-images";
-    // echo count($_FILES["images"]["tmp_name"]);
   }
   else {
     savePictures($_SESSION, $_POST, $connection, "drop");
@@ -71,13 +66,13 @@ function savePictures($session, $files, $connection, $flag){
       $files[$i] = json_decode($files[$i]);
       $query = 'INSERT INTO storage'.$session["id"].' VALUES(null, "'.$session["user"].'", "'.$files[$i]->name.'", "'.$files[$i]->path.'", "'.$files[$i]->size.'")';
     }
-
     
     $response = mysqli_query($connection, $query);
   }
 
   echo 'readyToLoad';
-}
+} // ----- savePictures function ---------------------------
+
 
 function getStoredPictures($session, $connection){
   $query = 'SELECT * FROM storage'.$session["id"];
@@ -88,28 +83,29 @@ function getStoredPictures($session, $connection){
   echo "json-".json_encode($fetchedData);
 
   return count($fetchedData);
-  // echo "ssss";
-}
+} // ----- getStoredPictures function ---------------------------
+
 
 function editImage($imgID, $newName, $id, $connection){
   $query = 'UPDATE storage'.$id.' SET img_name="'.$newName.'" WHERE id='.$imgID;
   $response = mysqli_query($connection, $query);
+
   if($response){
     echo "edit-name-success";
   }
-}
-
+} // ----- editImage function ---------------------------
 
 function deleteImage($id, $connection){
   $query = 'DELETE FROM storage'.$_SESSION["id"].' WHERE id='.$id;
   $response = mysqli_query($connection, $query);
+
   if($response){
     $_SESSION["counter"]--;
     echo "delete-image-".$id;
   }
-}
+} // ----- deleteImage function ---------------------------
 
-// delete user form users table & delete user storage table
+
 function deleteUser($id, $connection){
   $query = 'DROP TABLE storage'.$id;
   $response = mysqli_query($connection, $query);
@@ -123,9 +119,7 @@ function deleteUser($id, $connection){
       echo 'logout-user-success';
     }
   }
-  // session_destroy();
-  // echo 'logout-user-success';
-}
+} // ----- deleteUser function ---------------------------
 
 
 function checkSession(){
@@ -136,7 +130,7 @@ function checkSession(){
   else {
     $_SESSION["start-time"] = time();
   }
-}
+} // ----- checkSession function ---------------------------
 
 mysqli_close($connection);
 

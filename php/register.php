@@ -5,17 +5,13 @@ if(isset($_POST["g-recaptcha-response"])){
   $secret = '6Lcr8o8UAAAAAJdFFd-QyCbA3d1z8NIyoRWrCMuR';
 
   $response = file_get_contents($url.'?secret='.$secret.'&response='.$_POST["g-recaptcha-response"]);
-
   $data = json_decode($response);
 
   echo $data->success;
-
-  // print_r($data);
 }
 else if(isset($_POST["email"])){
   require_once "db_connect.php";
   $connection = mysqli_connect($host, $db_user, $db_password, $db_name);
-  // print_r($_POST);
 
   $limit = checkUsersLimit($connection);
 
@@ -40,7 +36,6 @@ else if(isset($_POST["email"])){
   if(!$check){
     die("wrong-data");
   }
-  // die("good-data");
 
   $email = addToDB($_POST, $connection);
   $data = false;
@@ -78,7 +73,7 @@ function checkUsersLimit($connection){
   else {
     return false;
   }
-}
+} // ----- checkUsersLimit function ---------------------------
 
 
 function existEmail($email, $connection){
@@ -128,17 +123,15 @@ function checkID($email, $connection){
   $query = 'SELECT * FROM users WHERE email="'.$email.'"';
   $response = mysqli_query($connection, $query);
   $fetchedData = mysqli_fetch_assoc($response);
-  // print_r($fetchedData);
-  // createSession($fetchedData);
+
   return $fetchedData;
-}
+} // ----- checkID function ---------------------------
 
 
 function createTable($data, $connection){
   $query = 'CREATE TABLE storage'.$data.'(id int NOT NULL AUTO_INCREMENT PRIMARY KEY, owner text NOT NULL, img_name text NOT NULL, img longblob NOT NULL, img_size text NOT NULL)';
   $response = mysqli_query($connection, $query);
 
-  // createSession($data);
   if($response){
     return "success";
   }
@@ -146,7 +139,6 @@ function createTable($data, $connection){
 
 
 function  createSession($data){
-  // session_set_cookie_params(600);
   session_start();
   $_SESSION["id"] = $data["id"];
   $_SESSION["user"] = $data["email"];

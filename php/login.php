@@ -8,7 +8,6 @@
     }
     else {
       session_destroy();
-      echo "no-logged";
     }
   } 
   else if(isset($_GET["email"]) && isset($_GET["password"])) {

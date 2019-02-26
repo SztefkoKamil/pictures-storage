@@ -3,6 +3,7 @@ const loginEmail = document.querySelector('#login-email');
 const loginPassword = document.querySelector('#login-password');
 const warningWindow = document.querySelector('#warning-window');
 let position = -60;
+let formErrors = [];
 
 
 function checkIfLogged(){

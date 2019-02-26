@@ -4,37 +4,57 @@
   text-align: center;
   margin-top: 20px;
 }
-
+.login-header h2{
+  font-size: 32px;
+}
 .login-header h3{
   font-weight: 400;
-  margin-top: 20px;
+  font-size: 16px;
+  margin-top: 30px;
 }
 
 .login-form{
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid black;
-  padding: 20px;
-  margin: 20px 0 50px 0;
-  box-shadow: 1px 1px 5px 0px gray;
+  border-bottom: 1px dotted black;
+  padding: 20px 0 30px 0;
+  margin: 20px 0;
 }
-
-body input{
-  border: 1px solid black;
-  height: 20px;
+.login-form label{
+  font-size: 16px;
+  padding-bottom: 2px;
+}
+.login-form input{
+  height: 25px;
   padding: 5px;
   text-align: center;
+  border: 2px solid #000;
+  border-radius: 5px;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
 }
 
 .login-password-label{
   margin-top: 15px;
 }
 
+.button{
+  cursor: pointer;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  background: rgb(61, 41, 188);
+  color: #fff;
+  transition: all .3s linear;
+}
+.button:hover{
+  border-radius: 25px;
+}
+
 .login-button{
   margin: 15px 0 0 0;
-  padding: 5px 10px;
-  cursor: pointer;
+  padding: 7px 12px;
 }
 
 .login-error{
@@ -42,10 +62,9 @@ body input{
 }
 
 .goto-register-button{
-  padding: 5px 10px;
-  margin-bottom: 50px;
+  padding: 10px 15px;
+  margin-bottom: 30px;
   box-shadow: 1px 1px 5px 0px gray;
-  cursor: pointer;
 }
 
 .warning-window{

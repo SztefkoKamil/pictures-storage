@@ -6,14 +6,16 @@
 
 body{
   font-family: "Arial";
-  background: lightgray;
+  color: #fff;
+  min-height: 100vh;
+  background: linear-gradient(rgb(15, 154, 224), rgb(14, 78, 181));
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
 }
 
 .container{
   margin-top: 50px;
-  background: #fafafa;
   width: 960px;
   display: flex;
   flex-direction: column;

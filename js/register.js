@@ -44,7 +44,7 @@ function actionListener(){
 
 
   grecaptcha.render('register-captcha',{
-    'sitekey': '6Lcr8o8UAAAAALuj6bO4j1pqIRVYmURl3wBJpjT1',
+    'sitekey': 'SITE_KEY',
     'callback': recaptcha,
     'expired-callback': expired
   });

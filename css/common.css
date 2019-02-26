@@ -29,3 +29,17 @@ body{
     margin-top: 0;
   }
 }
+
+.button{
+  cursor: pointer;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  background: rgb(61, 41, 188);
+  color: #fff;
+  transition: all .3s linear;
+}
+@media screen and (min-width: 962px){
+  .button:hover{
+    border-radius: 25px;
+  }
+}

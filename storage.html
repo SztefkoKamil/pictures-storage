@@ -9,39 +9,38 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link href="css/common.css" type="text/css" rel="stylesheet">
     <link href="css/storage.css" type="text/css" rel="stylesheet">
-    <script type="module" src="js/main.js"></script>
 </head>
 <body>
     <div class="container">
       <div class="action-bar" id="action-bar">
-        <button class="delete-user-button" id="delete-user-button">
+        <button class="button delete-user-button" id="delete-user-button">
             <i class="fas fa-user-times"></i>
             <span>Skasuj konto</span>
         </button>
         <h3>
-            <span id="welcome-message">Witaj Guest!</span>
-            <span>Dodaj zdjęcie do swojej kolekcji.</span>
+            <span class="welcome-message" id="welcome-message">Witaj Guest!</span>
+            <span class="second-message" >Dodaj zdjęcie do swojej kolekcji.</span>
         </h3>
         <div class="upload-field">
             <form class="upload-form" id="upload-form" method="post" enctype="multipart/form-data">
-                <input type="file" name="images[]" multiple accept="image/*" class="upload-input" id="upload-input">
-                <button class="upload-button" id="upload-button" type="submit">Dodaj zdjęcia</button>
+                <input type="file" name="images[]" multiple accept="image/*" class="pointer upload-input" id="upload-input">
+                <div class="file-input-cover"></div>
+                <span class="file-input-button xx" id="file-input-button">Wybierz pliki ...</span>
+                <span class="files-counter" id="files-counter">Nie wybrano zdjęć.</span>
+                <button class="button upload-button disabled" id="upload-button" type="submit">Dodaj zdjęcia</button>
             </form>
-            <div class="drop-container">
                 <div class="drop-field" id="drop-field" draggable="true">
                     <span>Upuść zdjęcie tutaj!</span>
                     <i class="fas fa-file-upload"></i>
                 </div>
-                <span class="drop-field-counter" id="drop-field-counter">Nie wybrano obrazka</span>
-            </div>
         </div>
-        <button class="logout-button" id="logout-button" draggable="true">
+        <button class="button logout-button" id="logout-button" draggable="true">
             <span>Wyloguj się</span>
             <i class="fas fa-sign-out-alt"></i>
         </button>
         <div class="mini-menu" id="mini-menu">
             <span>MENU</span>
-            <button class="mini-button" id="mini-button">
+            <button class="button mini-button" id="mini-button">
                 <i class="far fa-arrow-alt-circle-down"></i>
             </button>
         </div>
@@ -59,11 +58,12 @@
         </div>
         <div class="warning-window" id="warning-window"></div>
         <div class="storage-modal" id="storage-modal">
-            <button class="modal-button left" id="modal-left-button">&#60;</button>
+            <button class="btn modal-button left" id="modal-left-button">&#60;</button>
             <img class="storage-modal-img" id="storage-modal-img" src="" alt="current picture">
-            <button class="modal-button right" id="modal-right-button">&#62;</button>
-            <button class="modal-close-button" id="modal-close-button">X</button>
+            <button class="btn modal-button right" id="modal-right-button">&#62;</button>
+            <button class="btn modal-close-button" id="modal-close-button">X</button>
         </div>
     </div>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

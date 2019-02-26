@@ -4,9 +4,10 @@ const logoutBtn = document.querySelector('#logout-button');
 const deleteUserBtn = document.querySelector('#delete-user-button');
 const uploadForm = document.querySelector('#upload-form');
 const uploadInput = document.querySelector('#upload-input');
+const fileInputBtn = document.querySelector('#file-input-button');
+const filesCounter = document.querySelector('#files-counter');
 const uploadBtn = document.querySelector('#upload-button');
 const dropField = document.querySelector('#drop-field');
-const dropFieldCounter = document.querySelector('#drop-field-counter');
 const miniBtn = document.querySelector('#mini-button');
 const warningWindow = document.querySelector('#warning-window');
 const storageContainer = document.querySelector('#storage-container');
@@ -42,6 +43,11 @@ function actionListeners(){
     }
   };  // ----- delete user button listener -------------
 
+
+  uploadInput.onchange = (e) => {
+    showFilesCounter(uploadInput.files.length);
+    uploadBtn.classList.remove('disabled');
+  } // ----- upload input listener ----------------
 
   uploadForm.onsubmit = (e) => {
     e.preventDefault();
@@ -83,6 +89,12 @@ function actionListeners(){
     }
   };  // ----- mini menu button listener -----------------------
 
+  uploadInput.onmouseenter = () => {
+    fileInputBtn.classList.add('hover');
+  }
+  uploadInput.onmouseleave = () => {
+    fileInputBtn.classList.remove('hover');
+  }
 
 } // ----- actionListeners function ---------------------
 
@@ -219,22 +231,8 @@ function saveDropped(e){
   }
   
   setTimeout(() => {
-    if(x > 0){
-      let message = 'Wybrano ';
-      if(x == 1){
-        message += '1 obrazek.';
-      }
-      else if(x > 1 && x < 5 ){
-        message += x + ' obrazki.';
-      }
-      else if(x > 4){
-        message += x + ' obrazków.';
-      }
-      dropFieldCounter.innerText = message;
-    }
-    else {
-      dropFieldCounter.innerText = 'Nie wybrano obrazka';
-    }
+    showFilesCounter(x);
+    uploadBtn.classList.remove('disabled');
 
     const data = {
       url: 'php/storage.php',
@@ -244,7 +242,8 @@ function saveDropped(e){
 
     uploadBtn.addEventListener('click', () => {
       doRequest(data);
-      dropFieldCounter.innerText = 'Nie wybrano obrazka';
+      filesCounter.innerText = 'Nie wybrano obrazka';
+      uploadBtn.classList.add('disabled');
     }, {once: true});
   }, 100);
 
@@ -252,21 +251,29 @@ function saveDropped(e){
 
 function saveUploaded(files){
   if(files.length > 0){
+    filesCounter.innerText = 'Nie wybrano obrazka';
     const formData = new FormData();
+    let x = 0;
 
     for(let i=0; i<files.length; i++){
       if(files[i].size < 5242880){
         formData.append('images[]', files[i]);
+        x++;
       }
     }
 
-    const data = {
-      url: 'php/storage.php',
-      method: 'POST',
-      body: formData
-    };
+    if(x){
 
-    doRequest(data);
+      const data = {
+        url: 'php/storage.php',
+        method: 'POST',
+        body: formData
+      };
+  
+      doRequest(data);
+      uploadBtn.classList.add('disabled');
+    }
+
   }
   else {
     console.log('no pictures chosen');
@@ -316,7 +323,7 @@ function showWarning(data){
   requestAnimationFrame(slideDown);
   setTimeout(() => {
     requestAnimationFrame(slideUp);
-  }, 10000);
+  }, 2000);
 } // ----- showWarning function -------------
 
 function slideDown(){
@@ -341,6 +348,25 @@ function slideUp(){
   }
 } // ----- slideUp function ---------------
 
+
+function showFilesCounter(files){
+  if(files > 0){
+    let message = 'Wybrano ';
+    if(files == 1){
+      message += '1 zdjęcie.';
+    }
+    else if(files > 1 && files < 5 ){
+      message += files + ' zdjęcia.';
+    }
+    else if(files > 4){
+      message += files + ' zdjęć.';
+    }
+    filesCounter.innerText = message;
+  }
+  else {
+    filesCounter.innerText = 'Nie wybrano zdjęć.';
+  }
+}
 
 function showPictures(data){
   storageContainer.innerHTML = "";

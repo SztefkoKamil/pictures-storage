@@ -40,18 +40,6 @@
   margin-top: 15px;
 }
 
-.button{
-  cursor: pointer;
-  border: 2px solid #fff;
-  border-radius: 5px;
-  background: rgb(61, 41, 188);
-  color: #fff;
-  transition: all .3s linear;
-}
-.button:hover{
-  border-radius: 25px;
-}
-
 .login-button{
   margin: 15px 0 0 0;
   padding: 7px 12px;

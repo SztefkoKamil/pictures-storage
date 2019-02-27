@@ -1,6 +1,6 @@
 'use strict';
 
-import {checkIfLogged, listenToSubmit} from './login.js';
+import {checkIfLogged, listenToSubmit} from './index.js';
 import {loadAccount, actionListeners} from './storage.js';
 import {actionListener} from './register.js';
 

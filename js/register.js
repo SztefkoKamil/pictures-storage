@@ -193,7 +193,7 @@ function showWarning(data){
   requestAnimationFrame(slideDown);
   setTimeout(() => {
     requestAnimationFrame(slideUp);
-  }, 10000);
+  }, 2000);
 
 } // ----- showWarning function --------------
 

@@ -3,11 +3,10 @@ const loginEmail = document.querySelector('#login-email');
 const loginPassword = document.querySelector('#login-password');
 const warningWindow = document.querySelector('#warning-window');
 let position = -60;
-let formErrors = [];
 
 
 function checkIfLogged(){
-  const url = 'php/login.php?check=logged';
+  const url = 'php/index.php?check=logged';
   sendRequest(url);
 } // ----- checkIfLogged function -------------
 
@@ -23,7 +22,7 @@ function submitLogin(){
     email: loginEmail.value,
     password: loginPassword.value
   }
-  const url = `php/login.php?email=${data.email}&password=${data.password}`;
+  const url = `php/index.php?email=${data.email}&password=${data.password}`;
 
   let loginValidation = checkLogin(data);
 
@@ -35,6 +34,7 @@ function submitLogin(){
 function checkLogin(data){
   const emailPattern = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
   const emailIsValid = emailPattern.test(data.email);
+  const formErrors = [];
 
   const inputs = document.querySelectorAll('input');
 
@@ -42,7 +42,6 @@ function checkLogin(data){
     input.classList.remove('login-error');
   });
 
-  const formErrors = [];
   let emailValid = false;
   if(!emailIsValid){
     inputs[0].classList.add('login-error');
@@ -70,7 +69,6 @@ function checkLogin(data){
 } // ----- checkLogin function ---------------
 
 function showWarning(data){
-  formErrors = [];
   let message = '';
   
   if(Array.isArray(data)){
@@ -91,7 +89,7 @@ function showWarning(data){
   requestAnimationFrame(slideDown);
   setTimeout(() => {
     requestAnimationFrame(slideUp);
-  }, 10000);
+  }, 2000);
 } // ----- showWarning function -------------
 
 function slideDown(){

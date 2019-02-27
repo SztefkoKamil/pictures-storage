@@ -144,12 +144,6 @@
 .logout-button i{
   font-size: 30px;
 }
-@media screen and (max-width: 670px){
-  .upload-form{
-  }
-  .upload-input{
-  }
-}
 
 .delete-user-button{
   width: 50px;

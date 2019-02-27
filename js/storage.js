@@ -19,7 +19,6 @@ let gallery = [];
 function actionListeners(){
 
   logoutBtn.onclick = () => {
-    console.log('logout');
     const data = {
       url: 'php/storage.php?action=logout-user',
       method: 'GET',
@@ -366,7 +365,7 @@ function showFilesCounter(files){
   else {
     filesCounter.innerText = 'Nie wybrano zdjęć.';
   }
-}
+} // ----- showFilesCounter function -----------
 
 function showPictures(data){
   storageContainer.innerHTML = "";

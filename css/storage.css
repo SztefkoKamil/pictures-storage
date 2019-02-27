@@ -71,7 +71,7 @@
   z-index: 6;
 }
 .file-input-button{
-  width: 130px;
+  min-width: 100px;
   border: 2px solid #fff;
   border-radius: 5px;
   background: rgb(61, 41, 188);
@@ -97,7 +97,7 @@
 }
 
 .upload-button{
-  width: 94px;
+  min-width: 100px;
   padding: 4px 5px;
   position: absolute;
   left: 6px;
@@ -132,8 +132,8 @@
 }
 
 .logout-button{
-  width: 160px;
-  height: 60px;
+  min-width: 160px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -199,15 +199,15 @@
   .logout-button{
     grid-row: 1;
     grid-column: 5/7;
-    width: 80px;
+    min-width: 80px;
     justify-self: center;
     flex-direction: column;
     align-items: center;
+    padding: 5px 2px;
   }
   .logout-button span{
     font-weight: 400;
     font-size: 12px;
-    padding-right: 6px;
     order: 2;
   }
   .logout-button i{
@@ -239,7 +239,7 @@
     z-index: 12;
   }
   .file-input-button{
-    width: 102px;
+    min-width: 102px;
     font-size: 12px;
     top: 0;
   }

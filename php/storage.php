@@ -24,7 +24,7 @@ else if(isset($_GET['action']) && $_GET['action']==='delete-image' && isset($_GE
   deleteImage($_GET['imageID'], $connection);
 }
 else if(isset($_GET['action']) && $_GET['action']==='delete-user'){
-  deleteUser($_SESSION["id"], $connection);
+  deleteUser($_SESSION, $connection);
 }
 else if(isset($_FILES['images'])){
   if(($_SESSION["counter"] + count($_FILES["images"]["tmp_name"])) > 12){
@@ -106,17 +106,19 @@ function deleteImage($id, $connection){
 } // ----- deleteImage function ---------------------------
 
 
-function deleteUser($id, $connection){
-  $query = 'DROP TABLE storage'.$id;
-  $response = mysqli_query($connection, $query);
-
-  if($response){
-    $query = 'DELETE FROM users WHERE id='.$id;
+function deleteUser($session, $connection){
+  if($session["user"] != "guest@test.pl"){
+    $query = 'DROP TABLE storage'.$session["id"];
     $response = mysqli_query($connection, $query);
-
+  
     if($response){
-      session_destroy();
-      echo 'logout-user-success';
+      $query = 'DELETE FROM users WHERE id='.$session["id"];
+      $response = mysqli_query($connection, $query);
+  
+      if($response){
+        session_destroy();
+        echo 'logout-user-success';
+      }
     }
   }
 } // ----- deleteUser function ---------------------------
